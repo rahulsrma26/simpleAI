@@ -3,10 +3,10 @@
 
 #include "nntypes.h"
 #include <cmath>
+#include <numeric>
 #include <functional>
 
 namespace simpleNN {
-    using VectorProcessor = std::function<realVector(const realVector&)>;
 
     using Activator = std::pair<VectorProcessor, VectorProcessor>;
 
@@ -15,14 +15,60 @@ namespace simpleNN {
                 [](const realVector& in) {
                     realVector out = in;
                     for (auto& x : out)
-                        x = 1.0 / (1.0 + exp(-x));
+                        x = 1.0 / (1.0 + std::exp(-x));
+                    return out;
+                }
+            },{
+                [](const realVector& in) {
+                    realVector out = in;
+                    for (auto& x : out) {
+                        const real v = 1.0 / (1.0 + std::exp(-x));
+                        x = v*(1.0 - v);
+                    }
+                    return out;
+                }
+            }
+        };
+
+        const static Activator tanh = { {
+                [](const realVector& in) {
+                    realVector out = in;
+                    for (auto& x : out)
+                        x = std::tanh(x);
+                    return out;
+                }
+            },{
+                [](const realVector& in) {
+                    realVector out = in;
+                    for (auto& x : out) {
+                        const real v = std::tanh(x);
+                        x = 1 - v*v;
+                    }
+                    return out;
+                }
+            }
+        };
+
+        const static Activator softmax = { {
+                [](const realVector& in) {
+                    realVector out = in;
+                    for (auto& x : out)
+                        x = std::exp(x);
+                    real sum = std::accumulate(out.begin(), out.end(), real(0.0));
+                    for (auto& x : out)
+                        x /= sum;
                     return out;
                 }
             },{
                 [](const realVector& in) {
                     realVector out = in;
                     for (auto& x : out)
-                        x = -exp(-x);
+                        x = std::exp(x);
+                    real sum = std::accumulate(out.begin(), out.end(), real(0.0));
+                    for (auto& x : out) {
+                        const real v = x / sum;
+                        x = v*(1 - v);
+                    }
                     return out;
                 }
             }

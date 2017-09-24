@@ -12,18 +12,26 @@ namespace dataset {
     uint32_t MnistDataSet::size() { return _count; }
 
 
-    std::pair<std::vector<double>, uint32_t> MnistDataSet::getData(uint32_t idx) {
-        std::vector<double> image;
+    std::pair<realMatrix, realMatrix> MnistDataSet::getData(size_t begin, size_t end){
+        if (begin > size())
+            return { {},{} };
+
+        if (end > size())
+            end = size();
+
         const auto length = _height*_width;
-        image.reserve(length);
+        realMatrix dataX, dataY;
+        for (size_t idx = begin; idx < end; ++idx) {
+            realVector image(length);
+            for (uint32_t i = 0, j = idx*length; i < length; i++, j++)
+                image[i] = _imageBuffer[j] / 255.0;
+            dataX.emplace_back(image);
 
-        for (uint32_t i = 0, j = idx*length; i < length; i++, j++) {
-            image.push_back(_imageBuffer[j] / 255.0);
-            std::cout << ((_imageBuffer[j] > 127) ? "#" : ".");
-            if ((i + 1) % 28 == 0)std::cout << std::endl;
+            realVector label(10, 0.0);
+            label[_labelBuffer[idx]] = 1.0;
+            dataY.emplace_back(label);
         }
-
-        return { image, _labelBuffer[idx] };
+        return { dataX,  dataY };
     }
 
 

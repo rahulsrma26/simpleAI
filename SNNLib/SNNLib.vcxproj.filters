@@ -45,6 +45,9 @@
     <ClInclude Include="include\NeuralNetwork.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\lossFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\mnistDataSet.cpp">

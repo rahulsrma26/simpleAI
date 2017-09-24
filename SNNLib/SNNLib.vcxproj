@@ -106,6 +106,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -138,6 +139,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -152,6 +154,7 @@
   <ItemGroup>
     <ClInclude Include="include\activators.h" />
     <ClInclude Include="include\DenseLayer.h" />
+    <ClInclude Include="include\lossFunctions.h" />
     <ClInclude Include="include\mnistDataSet.h" />
     <ClInclude Include="include\NeuralNetwork.h" />
     <ClInclude Include="include\nntypes.h" />
