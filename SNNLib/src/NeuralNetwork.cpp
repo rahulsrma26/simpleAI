@@ -33,7 +33,7 @@ namespace simpleNN {
     }
 
     void NeuralNetwork::backPropogate(const realVector& output, const realVector& label) {
-        auto delta = cost.second(output, label);
+        auto delta = cost.second(*layers.back(), output, label);
         for (size_t i = layers.size(); i; --i)
             delta = layers[i - 1]->backward(delta);
     }
@@ -47,16 +47,23 @@ namespace simpleNN {
         size_t batchSize, real learningRate) 
     {
         const size_t samples = input.size();
+
+        std::vector<size_t> indices(samples);
+        for (size_t i = 0; i < samples; ++i)
+            indices[i] = i;
+        std::shuffle(indices.begin(), indices.end(), nnRandomEngine);
+        
         for (size_t i = 0; i < samples; ) {
             for (size_t j = 0; j < batchSize; ++j, ++i) {
-                auto output = feedForward(input[i]);
-                backPropogate(output, label[i]);
+                size_t idx = indices[i];
+                auto output = feedForward(input[idx]);
+                backPropogate(output, label[idx]);
             }
             update(learningRate);
         }
     }
 
-    inline uint32_t getClass(const realVector& data) {
+    inline size_t getClass(const realVector& data) {
         return std::max_element(data.begin(), data.end()) - data.begin();
     }
 

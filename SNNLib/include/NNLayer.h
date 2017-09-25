@@ -26,6 +26,10 @@ namespace simpleNN {
             return weightsTransposeDelta;
         }
 
+        virtual realVector getInput() const {
+            return realVector(numNeurons);
+        }
+
         virtual void update(real eta) {}
 
         size_t size() const {

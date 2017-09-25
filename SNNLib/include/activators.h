@@ -15,7 +15,7 @@ namespace simpleNN {
                 [](const realVector& in) {
                     realVector out = in;
                     for (auto& x : out)
-                        x = 1.0 / (1.0 + std::exp(-x));
+                        x = (real)1.0 / (1.0 + std::exp(-x));
                     return out;
                 }
             },{
@@ -44,6 +44,23 @@ namespace simpleNN {
                         const real v = std::tanh(x);
                         x = 1 - v*v;
                     }
+                    return out;
+                }
+            }
+        };
+
+        const static Activator relu = { {
+                [](const realVector& in) {
+                    realVector out = in;
+                    for (auto& x : out)
+                        x = x < 0 ? 0 : x;
+                    return out;
+                }
+            },{
+                [](const realVector& in) {
+                    realVector out = in;
+                    for (auto& x : out)
+                        x = x < 0 ? 0 : 1;
                     return out;
                 }
             }

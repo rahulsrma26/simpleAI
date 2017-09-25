@@ -2,6 +2,7 @@
 #define __NEURAL_NETWORK_H_
 
 #include <memory>
+#include <algorithm>
 #include "nntypes.h"
 #include "NNLayer.h"
 #include "lossFunctions.h"

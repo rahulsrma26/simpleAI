@@ -12,16 +12,15 @@ namespace dataset {
     uint32_t MnistDataSet::size() { return _count; }
 
 
-    std::pair<realMatrix, realMatrix> MnistDataSet::getData(size_t begin, size_t end){
-        if (begin > size())
-            return { {},{} };
-
-        if (end > size())
-            end = size();
+    std::pair<realMatrix, realMatrix> MnistDataSet::getData(){
+        std::vector<size_t> indices(_count);
+        for (size_t i = 0; i < _count; ++i)
+            indices[i] = i;
+        std::shuffle(indices.begin(), indices.end(), std::default_random_engine());
 
         const auto length = _height*_width;
         realMatrix dataX, dataY;
-        for (size_t idx = begin; idx < end; ++idx) {
+        for (auto idx : indices) {
             realVector image(length);
             for (uint32_t i = 0, j = idx*length; i < length; i++, j++)
                 image[i] = _imageBuffer[j] / 255.0;
@@ -31,6 +30,7 @@ namespace dataset {
             label[_labelBuffer[idx]] = 1.0;
             dataY.emplace_back(label);
         }
+        
         return { dataX,  dataY };
     }
 

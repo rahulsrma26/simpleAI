@@ -28,6 +28,7 @@ namespace simpleNN {
         DenseLayer& operator=(DenseLayer&&) = default;*/
 
         virtual void initialize(size_t numInputConnections) override;
+        virtual realVector getInput() const override;
         virtual realVector forward(const realVector& previousActivation) override;
         virtual realVector backward(const realVector& weightsTransposeDelta) override;
         virtual void update(real eta) override;

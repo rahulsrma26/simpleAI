@@ -27,6 +27,10 @@ namespace simpleNN {
         deltaW = realMatrix(numNeurons, realVector(inputConnections, 0.0));
     }
 
+    realVector DenseLayer::getInput() const {
+        return input;
+    }
+
     realVector DenseLayer::forward(const realVector& previousActivation) {
         std::copy(previousActivation.begin(), previousActivation.end(), input.begin());
         for (size_t i = 0; i < numNeurons; ++i) {
