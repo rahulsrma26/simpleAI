@@ -31,19 +31,45 @@ namespace simpleNN {
             }
         };
 
+        constexpr real lossEpsilon = 1e-5;
+
         const static LossFunction crossEntropy = { {
                 [](const realVector& output, const realVector& label) {
                     real loss = 0.0;
                     for (size_t i = 0; i < output.size(); ++i)
-                        loss += output[i] * std::log(label[i])
-                            + (1.0 - output[i]) * std::log(1.0 - label[i]);
+                        loss += output[i] * log(lossEpsilon + label[i])
+                            + (1.0 - output[i]) * log(1.0 + lossEpsilon - label[i]);
                     return -loss;
                 }
             },{
                 [](const NNLayer& layer, const realVector& output, const realVector& label) {
                     realVector gradient(output.size());
-                    for (size_t i = 0; i < gradient.size(); ++i)
-                        gradient[i] = (output[i] - label[i]) / (output[i] * (1.0 - output[i]));
+                    for (size_t i = 0; i < gradient.size(); ++i) {
+                        const real denom = output[i] * (1.0 - output[i]);
+                        gradient[i] = (output[i] - label[i]) / (lossEpsilon + denom);
+                    }
+                    return gradient;
+                }
+            }
+        };
+
+        // only positive values ideally between 0 and 1
+        const static LossFunction hillinger = { {
+                [](const realVector& output, const realVector& label) {
+                    real loss = 0.0;
+                    for (size_t i = 0; i < output.size(); ++i) {
+                        real difference = sqrt(output[i]) - sqrt(label[i]);
+                        loss += difference*difference;
+                    }
+                    return loss / sqrt(2.0);
+                }
+            },{
+                [](const NNLayer& layer, const realVector& output, const realVector& label) {
+                    realVector gradient(output.size());
+                    for (size_t i = 0; i < gradient.size(); ++i) {
+                        const real denom = sqrt(2.0 * output[i]);
+                        gradient[i] = (sqrt(output[i]) - sqrt(label[i])) / (lossEpsilon + denom);
+                    }
                     return gradient;
                 }
             }
