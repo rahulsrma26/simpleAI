@@ -59,11 +59,10 @@ int main()
     nn.add(make_unique<DenseLayer>(1, activators::sigmoid));
     auto[trainX, trainY, testX, testY] = spiralDataset(1000, false);*/
 
+    // 97.48% accuracy
     NeuralNetwork nn(784, loss::crossEntropy);
-    nn.add(make_unique<DenseLayer>(625));
-    nn.add(make_unique<Dropout>(0.5f)); 
-    nn.add(make_unique<DenseLayer>(25));
-    nn.add(make_unique<Dropout>(0.2f));
+    nn.add(make_unique<DenseLayer>(300));
+    nn.add(make_unique<Dropout>(0.5f));
     nn.add(make_unique<DenseLayer>(10));
     auto[trainX, trainY, testX, testY] = mnistDataset();
 
