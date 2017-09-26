@@ -6,17 +6,29 @@
 namespace simpleNN {
     class NNLayer {
     protected:
-        size_t numNeurons;
+        uint numNeurons;
+        uint inputConnections;
 
     public:
-        NNLayer(size_t _numNeurons) : numNeurons(_numNeurons) {}
+        NNLayer(uint _numNeurons) :
+            numNeurons(_numNeurons) {}
 
         /*NNLayer(const NNLayer&) = default;
         NNLayer(NNLayer&&) = default;
         NNLayer& operator=(const NNLayer&) = default;
         NNLayer& operator=(NNLayer&&) = default;*/
 
-        virtual void initialize(size_t inputs) {}
+        uint size() const {
+            return numNeurons;
+        }
+
+        virtual void initialize(uint numInputConnections) {
+            inputConnections = numInputConnections;
+        }
+
+        virtual realVector predict(const realVector& input) {
+            return input;
+        }
 
         virtual realVector forward(const realVector& input) { 
             return input; 
@@ -31,10 +43,6 @@ namespace simpleNN {
         }
 
         virtual void update(real eta) {}
-
-        size_t size() const {
-            return numNeurons;
-        }
     };
 }
 

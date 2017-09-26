@@ -15,15 +15,15 @@ namespace simpleNN {
                 [](const realVector& in) {
                     realVector out = in;
                     for (auto& x : out)
-                        x = (real)1.0 / (1.0 + std::exp(-x));
+                        x = 1 / (1 + std::exp(-x));
                     return out;
                 }
             },{
                 [](const realVector& in) {
                     realVector out = in;
                     for (auto& x : out) {
-                        const real v = 1.0 / (1.0 + std::exp(-x));
-                        x = v*(1.0 - v);
+                        const real v = 1 / (1 + std::exp(-x));
+                        x = v*(1 - v);
                     }
                     return out;
                 }
@@ -60,7 +60,24 @@ namespace simpleNN {
                 [](const realVector& in) {
                     realVector out = in;
                     for (auto& x : out)
-                        x = x < 0 ? 0 : 1;
+                        x = x < 0 ? 0.0f : 1.0f;
+                    return out;
+                }
+            }
+        };
+
+        const static Activator lrelu = { {
+                [](const realVector& in) {
+                    realVector out = in;
+                    for (auto& x : out)
+                        x = x < 0 ? 0.01f*x : x;
+                    return out;
+                }
+            },{
+                [](const realVector& in) {
+                    realVector out = in;
+                    for (auto& x : out)
+                        x = x < 0 ? 0.01f : 1.0f;
                     return out;
                 }
             }

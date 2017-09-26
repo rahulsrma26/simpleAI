@@ -3,12 +3,12 @@
 
 namespace simpleNN {
 
-    DenseLayer::DenseLayer(size_t _numNeurons, Activator _activator)
+    DenseLayer::DenseLayer(uint _numNeurons, Activator _activator)
         : NNLayer(_numNeurons), activator(_activator)
     {
     }
 
-    void DenseLayer::initialize(size_t numInputConnections) {
+    void DenseLayer::initialize(uint numInputConnections) {
         inputConnections = numInputConnections;
 
         input = realVector(inputConnections);
@@ -23,19 +23,23 @@ namespace simpleNN {
             for (auto& x : row)
                 x = Gaussian(nnRandomEngine);
         
-        deltaB = realVector(numNeurons, 0.0);
-        deltaW = realMatrix(numNeurons, realVector(inputConnections, 0.0));
+        deltaB = realVector(numNeurons, 0.0f);
+        deltaW = realMatrix(numNeurons, realVector(inputConnections, 0.0f));
     }
 
     realVector DenseLayer::getInput() const {
         return input;
     }
 
+    realVector DenseLayer::predict(const realVector& previousActivation) {
+        return forward(previousActivation);
+    }
+
     realVector DenseLayer::forward(const realVector& previousActivation) {
         std::copy(previousActivation.begin(), previousActivation.end(), input.begin());
-        for (size_t i = 0; i < numNeurons; ++i) {
+        for (uint i = 0; i < numNeurons; ++i) {
             real dot = 0.0;
-            for (size_t j = 0; j < inputConnections; ++j)
+            for (uint j = 0; j < inputConnections; ++j)
                 dot += input[j] * weights[i][j];
             weightedInput[i] = dot + bias[i];
         }
@@ -44,19 +48,19 @@ namespace simpleNN {
 
     realVector DenseLayer::backward(const realVector& WTdeltaNext) {
         realVector delta = activator.second(weightedInput);
-        for (size_t i = 0; i < numNeurons; ++i)
+        for (uint i = 0; i < numNeurons; ++i)
             deltaB[i] += (delta[i] *= WTdeltaNext[i]);
 
-        for (size_t i = 0; i < numNeurons; ++i)
-            for (size_t j = 0; j < inputConnections; ++j)
+        for (uint i = 0; i < numNeurons; ++i)
+            for (uint j = 0; j < inputConnections; ++j)
                 deltaW[i][j] += delta[i] * input[j];
         
         ++deltaN;
 
         realVector WTdelta(inputConnections);
-        for (size_t j = 0; j < inputConnections; ++j) {
+        for (uint j = 0; j < inputConnections; ++j) {
             real sum = 0.0;
-            for (size_t i = 0; i < numNeurons; ++i)
+            for (uint i = 0; i < numNeurons; ++i)
                 sum += weights[i][j] * delta[i];
             WTdelta[j] = sum;
         }
@@ -64,15 +68,15 @@ namespace simpleNN {
     }
 
     void DenseLayer::update(real eta) {
-        for (size_t i = 0; i < numNeurons; ++i) {
+        for (uint i = 0; i < numNeurons; ++i) {
             bias[i] -= eta*deltaB[i] / deltaN;
-            deltaB[i] = 0.0;
+            deltaB[i] = 0.0f;
         }
 
-        for (size_t i = 0; i < numNeurons; ++i)
-            for (size_t j = 0; j < inputConnections; ++j) {
+        for (uint i = 0; i < numNeurons; ++i)
+            for (uint j = 0; j < inputConnections; ++j) {
                 weights[i][j] -= eta*deltaW[i][j] / deltaN;
-                deltaW[i][j] = 0.0;
+                deltaW[i][j] = 0.0f;
             }
 
         deltaN = 0;

@@ -3,12 +3,12 @@
 
 namespace simpleNN {
 
-    NeuralNetwork::NeuralNetwork(size_t input, LossFunction _cost)
+    NeuralNetwork::NeuralNetwork(uint input, LossFunction _cost)
         : inputNeurons(input), cost(_cost)
     {
     }
 
-    size_t NeuralNetwork::inputSize() const {
+    uint NeuralNetwork::inputSize() const {
         return inputNeurons;
     }
 
@@ -16,13 +16,20 @@ namespace simpleNN {
         return layers.size() + 1;
     }
 
-    size_t NeuralNetwork::outputSize() const {
+    uint NeuralNetwork::outputSize() const {
         return layers.size()? layers.back()->size(): -1;
     }
 
     void NeuralNetwork::add(std::unique_ptr<NNLayer> layer) {
         layer->initialize(layers.size()? layers.back()->size(): inputNeurons);
         layers.push_back(std::move(layer));
+    }
+
+    realVector NeuralNetwork::predict(const realVector& input) {
+        auto output = input;
+        for (auto& layer : layers)
+            output = layer->predict(output);
+        return output;
     }
 
     realVector NeuralNetwork::feedForward(const realVector& input) {
@@ -33,7 +40,7 @@ namespace simpleNN {
     }
 
     void NeuralNetwork::backPropogate(const realVector& output, const realVector& label) {
-        auto delta = cost.second(*layers.back(), output, label);
+        auto delta = cost.second(output, label);
         for (size_t i = layers.size(); i; --i)
             delta = layers[i - 1]->backward(delta);
     }
@@ -44,18 +51,18 @@ namespace simpleNN {
     }
 
     void NeuralNetwork::train(const realMatrix& input, const realMatrix& label,
-        size_t batchSize, real learningRate) 
+        uint batchSize, real learningRate) 
     {
         const size_t samples = input.size();
 
-        std::vector<size_t> indices(samples);
-        for (size_t i = 0; i < samples; ++i)
+        uintVector indices(samples);
+        for (uint i = 0; i < samples; ++i)
             indices[i] = i;
         std::shuffle(indices.begin(), indices.end(), nnRandomEngine);
         
-        for (size_t i = 0; i < samples; ) {
-            for (size_t j = 0; j < batchSize; ++j, ++i) {
-                size_t idx = indices[i];
+        for (uint i = 0; i < samples; ) {
+            for (uint j = 0; j < batchSize; ++j, ++i) {
+                uint idx = indices[i];
                 auto output = feedForward(input[idx]);
                 backPropogate(output, label[idx]);
             }
@@ -64,20 +71,22 @@ namespace simpleNN {
     }
 
     inline size_t getClass(const realVector& data) {
+        if (data.size() == 1)
+            return data.front() < .5 ? 0 : 1;
         return std::max_element(data.begin(), data.end()) - data.begin();
     }
 
     nnStats NeuralNetwork::getStats(const realMatrix& input, const realMatrix& label){
         real loss = 0.0;
-        uint32_t correct = 0;
+        size_t correct = 0;
 
         const size_t samples = input.size();
         for (size_t i = 0; i < samples; ++i) {
-            auto output = feedForward(input[i]);
+            auto output = predict(input[i]);
             loss += cost.first(output, label[i]);
             if (getClass(output) == getClass(label[i]))
                 ++correct;
         }
-        return { loss / samples, (real)correct / samples };
+        return { (real)loss / samples, (real)correct / samples };
     }
 }

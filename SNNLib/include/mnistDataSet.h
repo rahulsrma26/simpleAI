@@ -30,6 +30,7 @@ namespace dataset {
         std::pair<realMatrix, realMatrix> getData();
         uint32_t show(uint32_t idx) const;
         ~MnistDataSet();
+        static std::pair<realMatrix, realMatrix> get(const std::string &imageFile, const std::string &labelFile);
     };
 }
 

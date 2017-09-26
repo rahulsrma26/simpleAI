@@ -10,25 +10,25 @@ namespace simpleNN {
     class DenseLayer : public NNLayer
     {
         Activator activator;
-        size_t inputConnections;
         realVector bias;
         realMatrix weights;
         realVector input;
         realVector weightedInput;
         realVector deltaB;
         realMatrix deltaW;
-        size_t deltaN;
+        uint deltaN;
 
     public:
-        DenseLayer(size_t numNeurons, Activator activator=activators::tanh);
+        DenseLayer(uint numNeurons, Activator activator=activators::tanh);
 
         /*DenseLayer(const DenseLayer&) = default;
         DenseLayer(DenseLayer&&) = default;
         DenseLayer& operator=(const DenseLayer&) = default;
         DenseLayer& operator=(DenseLayer&&) = default;*/
 
-        virtual void initialize(size_t numInputConnections) override;
+        virtual void initialize(uint numInputConnections) override;
         virtual realVector getInput() const override;
+        virtual realVector predict(const realVector& previousActivation) override;
         virtual realVector forward(const realVector& previousActivation) override;
         virtual realVector backward(const realVector& weightsTransposeDelta) override;
         virtual void update(real eta) override;

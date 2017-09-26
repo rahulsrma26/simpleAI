@@ -11,6 +11,12 @@ namespace dataset {
 
     uint32_t MnistDataSet::size() { return _count; }
 
+    std::pair<realMatrix, realMatrix> MnistDataSet::get(const std::string &imageFile, const std::string &labelFile) {
+        MnistDataSet data;
+        data.Load(imageFile, labelFile);
+        return data.getData();
+    }
+
 
     std::pair<realMatrix, realMatrix> MnistDataSet::getData(){
         std::vector<size_t> indices(_count);
@@ -22,8 +28,8 @@ namespace dataset {
         realMatrix dataX, dataY;
         for (auto idx : indices) {
             realVector image(length);
-            for (uint32_t i = 0, j = idx*length; i < length; i++, j++)
-                image[i] = _imageBuffer[j] / 255.0;
+            for (size_t i = 0, j = idx*length; i < length; i++, j++)
+                image[i] = _imageBuffer[j] / 255.0f;
             dataX.emplace_back(image);
 
             realVector label(10, 0.0);
@@ -101,5 +107,6 @@ namespace dataset {
             lblfile.read((char*)_labelBuffer.get(), _count);
             lblfile.close();
         }
+        return true;
     }
 }
