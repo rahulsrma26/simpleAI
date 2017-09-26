@@ -16,17 +16,17 @@ namespace simpleNN {
         realVector weightedInput;
         realVector deltaB;
         realMatrix deltaW;
-        uint deltaN;
+        int deltaN;
 
     public:
-        DenseLayer(uint numNeurons, Activator activator=activators::tanh);
+        DenseLayer(int numNeurons, Activator activator=activators::sigmoid);
 
         /*DenseLayer(const DenseLayer&) = default;
         DenseLayer(DenseLayer&&) = default;
         DenseLayer& operator=(const DenseLayer&) = default;
         DenseLayer& operator=(DenseLayer&&) = default;*/
 
-        virtual void initialize(uint numInputConnections) override;
+        virtual void initialize(int numInputConnections) override;
         virtual realVector getInput() const override;
         virtual realVector predict(const realVector& previousActivation) override;
         virtual realVector forward(const realVector& previousActivation) override;

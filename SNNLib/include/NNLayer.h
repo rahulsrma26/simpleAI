@@ -6,11 +6,11 @@
 namespace simpleNN {
     class NNLayer {
     protected:
-        uint numNeurons;
-        uint inputConnections;
+        int numNeurons;
+        int inputConnections;
 
     public:
-        NNLayer(uint _numNeurons) :
+        NNLayer(int _numNeurons) :
             numNeurons(_numNeurons) {}
 
         /*NNLayer(const NNLayer&) = default;
@@ -18,11 +18,11 @@ namespace simpleNN {
         NNLayer& operator=(const NNLayer&) = default;
         NNLayer& operator=(NNLayer&&) = default;*/
 
-        uint size() const {
+        int size() const {
             return numNeurons;
         }
 
-        virtual void initialize(uint numInputConnections) {
+        virtual void initialize(int numInputConnections) {
             inputConnections = numInputConnections;
         }
 

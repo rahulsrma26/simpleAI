@@ -7,7 +7,7 @@ namespace simpleNN {
         : NNLayer(0), probability(dropoutProbability)
     { }
 
-    void Dropout::initialize(uint numInputConnections) {
+    void Dropout::initialize(int numInputConnections) {
         numNeurons = inputConnections = numInputConnections;
         uint activeNeurons = static_cast<uint>(inputConnections * (1 - probability));
         active = realVector(inputConnections, 0);
@@ -23,21 +23,21 @@ namespace simpleNN {
     realVector Dropout::predict(const realVector& previousActivation) {
         auto activation = previousActivation;
         const real factor = 1 - probability;
-        for (uint i = 0; i < numNeurons; ++i)
+        for (int i = 0; i < numNeurons; ++i)
             activation[i] *= factor;
         return activation;
     }
 
     realVector Dropout::forward(const realVector& previousActivation) {
         auto activation = previousActivation;
-        for (uint i = 0; i < numNeurons; ++i)
+        for (int i = 0; i < numNeurons; ++i)
             activation[i] *= active[i];
         return activation;
     }
 
     realVector Dropout::backward(const realVector& WTdeltaNext) {
         auto WTdelta = WTdeltaNext;
-        for (uint i = 0; i < inputConnections; ++i)
+        for (int i = 0; i < inputConnections; ++i)
             WTdelta[i] *= active[i];
         return WTdelta;
     }

@@ -82,31 +82,6 @@ namespace simpleNN {
                 }
             }
         };
-
-        const static Activator softmax = { {
-                [](const realVector& in) {
-                    realVector out = in;
-                    for (auto& x : out)
-                        x = std::exp(x);
-                    real sum = std::accumulate(out.begin(), out.end(), real(0.0));
-                    for (auto& x : out)
-                        x /= sum;
-                    return out;
-                }
-            },{
-                [](const realVector& in) {
-                    realVector out = in;
-                    for (auto& x : out)
-                        x = std::exp(x);
-                    real sum = std::accumulate(out.begin(), out.end(), real(0.0));
-                    for (auto& x : out) {
-                        const real v = x / sum;
-                        x = v*(1 - v);
-                    }
-                    return out;
-                }
-            }
-        };
     }
 }
 

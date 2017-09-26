@@ -36,9 +36,9 @@ results in [MNIST dataset](http://yann.lecun.com/exdb/mnist/).
 Experiment:
 * Dataset: MNIST
 * Hidden Layers: 1 Dense Layer (100 neurons)
-* Learning Rate: 0.5 decreased by 4% every epoch
+* Learning Rate: 0.5 (decreased by 4% every epoch)
 
-Here is a comparision of different Loss-Functions
+Here is a comparision of different Loss-Functions (test-accuracy)
 ![alt text](./plots/accuracy_plot_1.png)
 ![alt text](./plots/accuracy_plot_2.png)
 
@@ -47,9 +47,28 @@ Here is a comparision of different Loss-Functions
 [](#project-structure)
 ## Project Structure
 *	__nntypes.h__  
-	Defines basic types for the library.
+	Defines basic types used in the library.
 
-*	__nntypes.h__
+*	__activators.h__  
+    Different Activators supported by library.
+
+*	__lossFunctions.h__  
+    Different Loss Functions supported by library.
+
+*	__NNLayer.h__  
+    Parent class for all layer types.
+
+*	__DenseLayer.h__  
+    Uses: DenseLayer(numNeurons, activator=activator::sigmoid)
+
+*	__Dropout.h__  
+    Uses: Dropout(dropoutProbability)
+
+*	__NeuralNetwork.h__  
+    Uses: NeuralNetwork(inputNeurons, cost=loss::quadratic)
+
+*	__simpleNN.h__  
+    Include Header (wrapper for Simple Neural Network Library).
 
 
 __Misc__  

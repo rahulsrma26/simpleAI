@@ -16,7 +16,7 @@ namespace simpleNN {
     public:
         Dropout(real dropoutProbability);
 
-        virtual void initialize(uint numInputConnections) override;
+        virtual void initialize(int numInputConnections) override;
         virtual realVector getInput() const override;
         virtual realVector predict(const realVector& previousActivation) override;
         virtual realVector forward(const realVector& previousActivation) override;

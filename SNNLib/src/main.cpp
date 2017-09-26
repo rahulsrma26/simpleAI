@@ -48,9 +48,9 @@ int main()
     using namespace chrono;
     using namespace simpleNN;
 
-    constexpr size_t SWEEPS = 1;
+    constexpr size_t SWEEPS = 30;
     constexpr size_t BATCH_SIZE = 10;
-    real ETA = 0.5;
+    real ETA = 0.5f;
 
     /*NeuralNetwork nn(2, loss::crossEntropy);
     nn.add(make_unique<DenseLayer>(8));
@@ -60,9 +60,11 @@ int main()
     auto[trainX, trainY, testX, testY] = spiralDataset(1000, false);*/
 
     NeuralNetwork nn(784, loss::crossEntropy);
-    nn.add(make_unique<DenseLayer>(100, activators::sigmoid));
-    //nn.add(make_unique<Dropout>(0.2f));
-    nn.add(make_unique<DenseLayer>(10, activators::sigmoid));
+    nn.add(make_unique<DenseLayer>(625));
+    nn.add(make_unique<Dropout>(0.5f)); 
+    nn.add(make_unique<DenseLayer>(25));
+    nn.add(make_unique<Dropout>(0.2f));
+    nn.add(make_unique<DenseLayer>(10));
     auto[trainX, trainY, testX, testY] = mnistDataset();
 
     printf("+-------+---------------------+---------------------+\n");
@@ -75,10 +77,10 @@ int main()
         nn.train(trainX, trainY, BATCH_SIZE, ETA);
         printf("| %5d |", i);
         auto stats = nn.getStats(trainX, trainY);
-        printf(" %0.6f | %0.6f |", stats.loss, stats.accuracy);
+        printf(" %8.5f | %0.6f |", stats.loss, stats.accuracy);
         stats = nn.getStats(testX, testY);
-        printf(" %0.6f | %0.6f |\n", stats.loss, stats.accuracy);
-        ETA *= .96f;
+        printf(" %8.5f | %0.6f |\n", stats.loss, stats.accuracy);
+        ETA *= .97f;
     }
 
     cout << "Done in "
@@ -121,4 +123,7 @@ Performance
 |  ce + dropout |  0.5 |    30 | 0.883343 | 0.976600 | 1.094968 | 0.963700 |
 +---------------+------+-------+---------------------+---------------------+
 
+1 iteration:
+Without OpenMP = 18.4469 seconds.
+   With OpenMP = 5.85805 seconds.
 */
