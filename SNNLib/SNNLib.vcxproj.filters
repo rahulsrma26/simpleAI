@@ -76,6 +76,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.md" />
+    <None Include="ReadMe.md" />
   </ItemGroup>
 </Project>

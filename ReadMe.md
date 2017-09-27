@@ -39,8 +39,8 @@ Experiment:
 * Learning Rate: 0.5 (decreased by 4% every epoch)
 
 Here is a comparision of different Loss-Functions (test-accuracy)
-![alt text](./plots/accuracy_plot_1.png)
-![alt text](./plots/accuracy_plot_2.png)
+![alt text](./SNNLib/plots/accuracy_plot_1.png)
+![alt text](./SNNLib/plots/accuracy_plot_2.png)
 
 ---
 
