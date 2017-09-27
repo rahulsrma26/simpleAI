@@ -32,6 +32,13 @@ namespace simpleNN {
         return output;
     }
 
+    realMatrix NeuralNetwork::predict(const realMatrix& inputs) {
+        realMatrix outputs;
+        for (auto& input : inputs)
+            outputs.push_back(predict(input));
+        return outputs;
+    }
+
     realVector NeuralNetwork::feedForward(const realVector& input) {
         auto output = input;
         for (auto& layer : layers)

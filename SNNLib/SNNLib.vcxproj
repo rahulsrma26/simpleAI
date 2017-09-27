@@ -168,6 +168,7 @@
     <ClInclude Include="include\NeuralNetwork.h" />
     <ClInclude Include="include\nntypes.h" />
     <ClInclude Include="include\simpleNN.h" />
+    <ClInclude Include="include\spiralDataset.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\targetver.h" />
     <ClInclude Include="include\NNLayer.h" />

@@ -5,42 +5,13 @@ author: Rahul Sharma
 
 #include "stdafx.h"
 #include "mnistDataSet.h"
+#include "spiralDataSet.h"
 #include "simpleNN.h"
 #include <cstdio>
 #include <chrono>
-using namespace std;
-using namespace simpleNN;
 
-auto spiralDataset(size_t samples = 1000, bool addSin = false) {
-    constexpr real pi = 3.14159265358979f;
-    realMatrix trainX, trainY, testX, testY;
-
-    auto gen = [&](real deltaT, const realVector& label, size_t n) {
-        for (size_t i = 0; i < n; ++i) {
-            real r = 5.0f * i / n;
-            real t = 1.75f * i / n * 2.0f * pi + deltaT;
-            real x = r * sin(t);
-            real y = r * cos(t);
-            realMatrix& xdata = i & 1 ? testX : trainX;
-            realMatrix& ydata = i & 1 ? testY : trainY;
-            if (addSin)
-                xdata.push_back({ x, y, sin(x), cos(y) });
-            else
-                xdata.push_back({ x, y });
-            ydata.push_back(label);
-        }
-    };
-
-    gen(0, { 0 }, samples / 2);
-    gen(pi, { 1 }, samples - samples / 2);
-    return make_tuple(trainX, trainY, testX, testY);
-}
-
-auto mnistDataset() {
-    auto[trainX, trainY] = dataset::MnistDataSet::get(".\\data\\train-images.idx3-ubyte", ".\\data\\train-labels.idx1-ubyte");
-    auto[testX, testY] = dataset::MnistDataSet::get(".\\data\\t10k-images.idx3-ubyte", ".\\data\\t10k-labels.idx1-ubyte");
-    return make_tuple(trainX, trainY, testX, testY);
-}
+// disable to run spiral test
+#define MNIST_TEST_RUN
 
 int main()
 {
@@ -48,23 +19,33 @@ int main()
     using namespace chrono;
     using namespace simpleNN;
 
+#ifdef MNIST_TEST_RUN
     constexpr size_t SWEEPS = 30;
     constexpr size_t BATCH_SIZE = 10;
     real ETA = 0.5f;
-
-    /*NeuralNetwork nn(2, loss::crossEntropy);
-    nn.add(make_unique<DenseLayer>(8));
-    nn.add(make_unique<DenseLayer>(8));
-    nn.add(make_unique<DenseLayer>(5));
-    nn.add(make_unique<DenseLayer>(1, activators::sigmoid));
-    auto[trainX, trainY, testX, testY] = spiralDataset(1000, false);*/
 
     // 97.48% accuracy
     NeuralNetwork nn(784, loss::crossEntropy);
     nn.add(make_unique<DenseLayer>(300));
     nn.add(make_unique<Dropout>(0.5f));
     nn.add(make_unique<DenseLayer>(10));
-    auto[trainX, trainY, testX, testY] = mnistDataset();
+    auto[trainX, trainY] = dataset::MnistDataSet::get(
+        ".\\data\\train-images.idx3-ubyte", ".\\data\\train-labels.idx1-ubyte");
+    auto[testX, testY] = dataset::MnistDataSet::get(
+        ".\\data\\t10k-images.idx3-ubyte", ".\\data\\t10k-labels.idx1-ubyte");
+
+#else // SPIRAL_TEST_RUN
+    constexpr size_t SWEEPS = 500;
+    constexpr size_t BATCH_SIZE = 10;
+    real ETA = 0.03f;
+
+    NeuralNetwork nn(2, loss::crossEntropy);
+    nn.add(make_unique<DenseLayer>(8, activators::tanh));
+    nn.add(make_unique<DenseLayer>(8, activators::tanh));
+    nn.add(make_unique<DenseLayer>(5, activators::tanh));
+    nn.add(make_unique<DenseLayer>(1, activators::sigmoid));
+    auto[trainX, trainY, testX, testY] = dataset::spiralDataset<real>(1000, false);
+#endif
 
     printf("+-------+---------------------+---------------------+\n");
     printf("|       |        train        |         test        |\n");
@@ -79,27 +60,17 @@ int main()
         printf(" %8.5f | %0.6f |", stats.loss, stats.accuracy);
         stats = nn.getStats(testX, testY);
         printf(" %8.5f | %0.6f |\n", stats.loss, stats.accuracy);
-        ETA *= .97f;
+        //ETA *= .97f;
     }
 
     cout << "Done in "
         << duration_cast<nanoseconds>(high_resolution_clock::now() - start).count() / 1e9
         << " seconds." << endl;
 
-    /*int n = 100;
-    ofstream fout;
-    fout.open("out.pgm");
-    fout << "P2" << endl;
-    fout << 2*n+1 << ' ' << 2*n+1 << endl;
-    fout << 99 << endl;
-    for (int y = -n; y <= n; ++y) {
-        for (int x = -n; x <= n; ++x) {
-            auto output = nn.feedForward({ 5.0f * x / n, 5.0f * y / n });
-            fout << min(max(0, (int)(output[0] * 99)), 99) << ' ';
-        }
-        fout << endl;
-    }
-    fout.close();*/
+#ifndef MNIST_TEST_RUN
+    int radius = 100;
+    dataset::saveGrid<real>("out.pgm", nn.predict(dataset::spiralGrid<real>(radius)), 2 * radius + 1);
+#endif
 
     return 0;
 }

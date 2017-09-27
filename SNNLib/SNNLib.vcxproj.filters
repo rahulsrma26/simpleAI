@@ -48,6 +48,9 @@
     <ClInclude Include="include\Dropout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\spiralDataset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\mnistDataSet.cpp">

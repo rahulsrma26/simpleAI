@@ -28,6 +28,7 @@ namespace simpleNN {
 
         void add(std::unique_ptr<NNLayer> layer);
         realVector predict(const realVector& input);
+        realMatrix NeuralNetwork::predict(const realMatrix& inputs);
         realVector feedForward(const realVector& activation);
         void backPropogate(const realVector& output, const realVector& label);
         void update(real eta);
