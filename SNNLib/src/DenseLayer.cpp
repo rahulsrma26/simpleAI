@@ -47,10 +47,10 @@ namespace simpleNN {
         return activator.first(weightedInput);
     }
 
-    realVector DenseLayer::backward(const realVector& WTdeltaNext) {
+    realVector DenseLayer::backward(const realVector& activationDelta) {
         realVector delta = activator.second(weightedInput);
         for (int i = 0; i < numNeurons; ++i)
-            deltaB[i] += (delta[i] *= WTdeltaNext[i]);
+            deltaB[i] += (delta[i] *= activationDelta[i]);
 
         #pragma omp parallel for
         for (int i = 0; i < numNeurons; ++i)
@@ -59,15 +59,15 @@ namespace simpleNN {
         
         ++deltaN;
 
-        realVector WTdelta(inputConnections);
+        realVector activationDeltaPrev(inputConnections);
         #pragma omp parallel for
         for (int j = 0; j < inputConnections; ++j) {
             real sum = 0.0;
             for (int i = 0; i < numNeurons; ++i)
                 sum += weights[i][j] * delta[i];
-            WTdelta[j] = sum;
+            activationDeltaPrev[j] = sum;
         }
-        return WTdelta;
+        return activationDeltaPrev;
     }
 
     void DenseLayer::update(real eta) {

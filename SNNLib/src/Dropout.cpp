@@ -35,11 +35,11 @@ namespace simpleNN {
         return activation;
     }
 
-    realVector Dropout::backward(const realVector& WTdeltaNext) {
-        auto WTdelta = WTdeltaNext;
+    realVector Dropout::backward(const realVector& activationDelta) {
+        auto activationDeltaPrev = activationDelta;
         for (int i = 0; i < inputConnections; ++i)
-            WTdelta[i] *= active[i];
-        return WTdelta;
+            activationDeltaPrev[i] *= active[i];
+        return activationDeltaPrev;
     }
 
     void Dropout::update(real eta) {

@@ -30,7 +30,7 @@ namespace simpleNN {
         virtual realVector getInput() const override;
         virtual realVector predict(const realVector& previousActivation) override;
         virtual realVector forward(const realVector& previousActivation) override;
-        virtual realVector backward(const realVector& weightsTransposeDelta) override;
+        virtual realVector backward(const realVector& activationDelta) override;
         virtual void update(real eta) override;
     };
 

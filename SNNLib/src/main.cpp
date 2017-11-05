@@ -47,25 +47,23 @@ int main()
     auto[trainX, trainY, testX, testY] = dataset::spiralDataset<real>(1000, false);
 #endif
 
-    printf("+-------+---------------------+---------------------+\n");
-    printf("|       |        train        |         test        |\n");
-    printf("| sweep |     loss | accuracy |     loss | accuracy |\n");
-    printf("|-------+----------+----------+----------+----------|\n");
+    printf("+-------+---------------------+---------------------+------------+\n");
+    printf("|       |        train        |         test        |            |\n");
+    printf("| sweep |     loss | accuracy |     loss | accuracy | time (sec) |\n");
+    printf("|-------+----------+----------+----------+----------+------------|\n");
 
-    auto start = high_resolution_clock::now();
     for (int i = 1; i <= SWEEPS; ++i) {
+        auto start = high_resolution_clock::now();
         nn.train(trainX, trainY, BATCH_SIZE, ETA);
         printf("| %5d |", i);
         auto stats = nn.getStats(trainX, trainY);
         printf(" %8.5f | %0.6f |", stats.loss, stats.accuracy);
         stats = nn.getStats(testX, testY);
-        printf(" %8.5f | %0.6f |\n", stats.loss, stats.accuracy);
+        printf(" %8.5f | %0.6f |", stats.loss, stats.accuracy);
         //ETA *= .97f;
+        double time = duration_cast<nanoseconds>(high_resolution_clock::now() - start).count() / 1e9;
+        printf(" %10.5f |\n", time);
     }
-
-    cout << "Done in "
-        << duration_cast<nanoseconds>(high_resolution_clock::now() - start).count() / 1e9
-        << " seconds." << endl;
 
 #ifndef MNIST_TEST_RUN
     int radius = 100;

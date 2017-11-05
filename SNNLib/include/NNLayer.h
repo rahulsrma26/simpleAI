@@ -34,8 +34,8 @@ namespace simpleNN {
             return input; 
         }
 
-        virtual realVector backward(const realVector& weightsTransposeDelta) {
-            return weightsTransposeDelta;
+        virtual realVector backward(const realVector& activationDelta) {
+            return activationDelta;
         }
 
         virtual realVector getInput() const {
