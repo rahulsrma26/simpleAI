@@ -89,7 +89,7 @@ After using a dropout of 30%.
 [](#project-structure)
 ## Building Project
 
-### Running examples
+### Building examples
 
 Examples can be build using [cmake](https://cmake.org/).
 
@@ -103,16 +103,26 @@ Examples can be build using [cmake](https://cmake.org/).
 
 * Windows
 
-    Visual Studio 2017 and later can directly open a CMake project. However, if you want to build using Developer Command prompt instead then run:
+    Visual Studio 2017 and later can directly open a CMake project. However, if you want to build using Developer Command prompt and have [cmake](https://cmake.org/) installed then run:
     ```sh
     mkdir build
     cd build
     cmake ..
-    msbuild examples.sln /t:Build /p:Configuration=Release
+    msbuild simpleNN.sln /t:Build /p:Configuration=Release
     ```
 ---
 
-## More ways to build
+### Running examples
+
+```sh
+# mnist example
+bin/mnist ../data
+# spiral example
+bin/spiral
+```
+For windows users that are using MSVC check .exe files in bin\Release folder.
+
+## Even More ways to build
 
 You can also be build using [ninja](https://ninja-build.org/) across any platform.
 
@@ -130,3 +140,4 @@ You can also be build using [ninja](https://ninja-build.org/) across any platfor
     choco intall -y mingw ninja cmake
     ```
     After that append cmake install path ("C:\Program Files\CMake\bin") to [Environment Variable](https://helpdeskgeek.com/windows-10/add-windows-path-environment-variable/).
+
