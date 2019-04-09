@@ -115,6 +115,8 @@ Examples can be build using [cmake](https://cmake.org/).
 ### Running examples
 
 ```sh
+# download MNIST dataset
+python download_mnist.py
 # mnist example
 bin/mnist ../data
 # spiral example
