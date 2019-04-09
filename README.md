@@ -9,7 +9,7 @@ You can download the dataset manually or run [download_mnist.py](download_mnist.
 *	[Features](#features)
 *	[Results](#results)
 *	[Project structure](#project-structure)
-*   [Building Project](#build-project)
+*   [Building Project](#building-project)
 
 ---
 
@@ -86,7 +86,7 @@ After using a dropout of 30%.
 
 ---
 
-[](#project-structure)
+[](#building-project)
 ## Building Project
 
 ### Building examples
