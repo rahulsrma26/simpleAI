@@ -91,12 +91,15 @@ After using a dropout of 30%.
 
 ### Building examples
 
-Examples can be build using [cmake](https://cmake.org/).
+```sh
+git clone https://github.com/rahulsrma26/simpleNN.git
+cd simpleNN
+mkdir build
+cd build
+```
 
 * Linux and MacOS (make)
     ```sh
-    mkdir build
-    cd build
     cmake ..
     make
     ```
@@ -105,33 +108,28 @@ Examples can be build using [cmake](https://cmake.org/).
 
     Visual Studio 2017 and later can directly open a CMake project. However, if you want to build using Developer Command prompt and have [cmake](https://cmake.org/) installed then run:
     ```sh
-    mkdir build
-    cd build
     cmake ..
     msbuild simpleNN.sln /t:Build /p:Configuration=Release
     ```
----
 
 ### Running examples
 
 ```sh
-# download MNIST dataset
-python download_mnist.py
+# After build first download MNIST dataset
+python ../download_mnist.py ../data
 # mnist example
 bin/mnist ../data
 # spiral example
 bin/spiral
 ```
-For windows users that are using MSVC check .exe files in bin\Release folder.
+For windows users that are using MSVC check '.exe' files in bin\Release folder.
 
-## Even More ways to build
+### Even More ways to build
 
 You can also be build using [ninja](https://ninja-build.org/) across any platform.
 
 * Using ninja
     ```sh
-    mkdir build
-    cd build
     cmake .. -GNinja
     ninja -v
     ```
