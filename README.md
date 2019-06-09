@@ -1,5 +1,5 @@
-Simple Neural Network Library
-=============================
+Simple Neural Network Library (v2 alpha)
+========================================
 
 This project is my attempt to create a simple neural network
 code in C++ (cpp17) that is powerful enough to give decent
@@ -14,22 +14,28 @@ You can download the dataset manually or run [download_mnist.py](download_mnist.
 ---
 
 [](#features)
-## Supported Features
+## Currently Supported Features
 
 ### Layers
 *	Dense Layer
-*	Dropout Layer
 
 ### Activators
 *	sigmoid
 *	tanh
 *	relu
-*	leaky-relu
 
 ### Loss Functions
 *	quadratic
 *	hillinger
 *	cross-entropy
+
+### Initializers
+*	zeros
+*	normal
+*	xavier
+
+### Optimizers
+*	SGD
 
 ---
 
@@ -38,51 +44,26 @@ You can download the dataset manually or run [download_mnist.py](download_mnist.
 
 The project is inspired by Keras. So, I tried to keep it very simple. Creating a network for MNIST.
 ```cpp
-    NeuralNetwork nn(784, loss::crossEntropy);
-    nn.add(make_unique<DenseLayer>(400));
-    nn.add(make_unique<Dropout>(0.3f));
-    nn.add(make_unique<DenseLayer>(10));
+    models::sequential m;
+    m.add("dense(units=300, input=784)");
+    m.add("dense(units=10)");
+    m.compile("loss=cross_entropy(), optimizer=sgd(learning_rate=0.5)");
 ```
-see [mnist.cpp](examples/mnist.cpp) for full code.
+see [demo_mnist.cpp](examples/demo_mnist.cpp) for full code.
 
 Experiment:
 * Dataset: MNIST
-* Hidden Layers: 1 Dense Layer (400 neurons, no dropout)
-* Learning Rate: 0.3 (decreased by 3% every epoch)
+* Hidden Layers: 1 Dense Layer (300 neurons)
+* Learning Rate: 0.5 (Decay = 0)
+* Batch Size: 32
 
 Here is a comparision of different Loss-Functions (test-accuracy)
-![alt text](docs/plots/accuracy_plot_1b.png)
-
-After using a dropout of 30%.
-![alt text](docs/plots/accuracy_plot_2b.png)
+![alt text](docs/plots/loss_functions.svg)
 
 ---
 
 [](#project-structure)
-## Project Structure
-*	__nntypes.h__  
-	Defines basic types used in the library.
-
-*	__activators.h__  
-    Different Activators supported by library.
-
-*	__lossFunctions.h__  
-    Different Loss Functions supported by library.
-
-*	__NNLayer.h__  
-    Parent class for all layer types.
-
-*	__DenseLayer.h__  
-    Uses: DenseLayer(numNeurons, activator=activator::sigmoid)
-
-*	__Dropout.h__  
-    Uses: Dropout(dropoutProbability)
-
-*	__NeuralNetwork.h__  
-    Uses: NeuralNetwork(inputNeurons, cost=loss::quadratic)
-
-*	__simpleNN.h__  
-    Include Header (wrapper for Simple Neural Network Library).
+add soon...
 
 ---
 
@@ -118,9 +99,11 @@ cd build
 # After build first download MNIST dataset
 python ../download_mnist.py ../data
 # mnist example
-bin/mnist ../data
+bin/demo_mnist ../data
 # spiral example
-bin/spiral
+bin/spiral_test
+# mnist model with save/restore
+bin/mnist_model
 ```
 For windows users that are using MSVC check '.exe' files in bin\Release folder.
 
