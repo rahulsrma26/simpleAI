@@ -7,6 +7,7 @@
 #include <string>
 #include "snn/nntypes.hpp"
 #include "snn/math/tensor.hpp"
+#include "snn/dataset/dataset.hpp"
 
 #ifdef _MSC_VER
 
@@ -61,7 +62,7 @@ namespace snn {
 namespace dataset {
 namespace mnist {
 
-std::pair<tensor<real>, tensor<real>> load(const std::string& path_prefix);
+dataset2 load(const std::string& path_prefix);
 
 } // namespace mnist
 } // namespace dataset

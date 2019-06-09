@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
-	auto data_dir = string(argv[1]);
+    auto data_dir = string(argv[1]);
     auto [trainX, trainY] = dataset::mnist::load(data_dir + "/train");
     auto [testX, testY] = dataset::mnist::load(data_dir + "/t10k");
     // flatten 2D images to 1D
@@ -34,16 +34,16 @@ int main(int argc, char* argv[]) {
         m.add("dense(units=10)");
         m.compile("loss=" + loss + "(), optimizer=sgd(learning_rate=" + learning_rate + ")");
         m.summary();
-	}
+    }
 
-	const int epochs = argc >= 3 ? stoi(argv[2]) : 20;
+    const int epochs = argc >= 3 ? stoi(argv[2]) : 20;
     for (int epoch = 1; epoch <= epochs; epoch++) {
         cout << "Epoch: " << epoch << '/' << epochs << endl;
         m.run(trainX, trainY, "batch_size=32");
         m.run(testX, testY, "batch_size=128, train=false");
     }
 
-	ofstream fout("model.bin", ios::binary | ios::out);
+    ofstream fout("model.bin", ios::binary | ios::out);
     m.save(fout);
     fout.close();
 }

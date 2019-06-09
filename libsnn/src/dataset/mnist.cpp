@@ -4,9 +4,9 @@ namespace snn {
 namespace dataset {
 namespace mnist {
 
-std::pair<tensor<real>, tensor<real>> load(const std::string& path_prefix) {
+dataset2 load(const std::string& path_prefix) {
     auto image_file = path_prefix + "-images-idx3-ubyte";
-    auto label_file = path_prefix + "-labels-idx1-ubyte"; 
+    auto label_file = path_prefix + "-labels-idx1-ubyte";
     uint32_t _count, _height, _width;
     tensor<real> dataX({1}), dataY({1});
     {
@@ -53,7 +53,8 @@ std::pair<tensor<real>, tensor<real>> load(const std::string& path_prefix) {
         magic = bswap_32(magic);
         if (magic != _count) {
             lblfile.close();
-            throw std::runtime_error("count does not match with data in label file: " + std::string(label_file));
+            throw std::runtime_error("count does not match with data in label file: " +
+                                     std::string(label_file));
         }
 
         std::vector<uint8_t> lblBuffer(_count);

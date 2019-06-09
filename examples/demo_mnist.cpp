@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
-	auto data_dir = string(argv[1]);
+    auto data_dir = string(argv[1]);
     auto [trainX, trainY] = dataset::mnist::load(data_dir + "/train");
     auto [testX, testY] = dataset::mnist::load(data_dir + "/t10k");
     // flatten 2D images to 1D
@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
     m.compile("loss=cross_entropy(), optimizer=sgd(learning_rate=0.5)");
     m.summary();
 
-	const int epochs = 20;
+    const int epochs = 20;
     for (int epoch = 1; epoch <= epochs; epoch++) {
         cout << "Epoch: " << epoch << '/' << epochs << endl;
         m.run(trainX, trainY, "batch_size=32");

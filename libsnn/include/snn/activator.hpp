@@ -14,7 +14,7 @@ class activator : public activators::base_activator {
 public:
     void create(const kwargs&);
     std::string name() const override;
-    
+
     tensor<real> f(const tensor<real>&) const override;
     tensor<real> df(const tensor<real>&) const override;
     void save(std::ostream& os) const override;

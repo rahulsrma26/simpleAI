@@ -3,15 +3,13 @@
 #include <tuple>
 #include <cmath>
 #include "snn/nntypes.hpp"
-#include "snn/dataset/dataset.hpp"
 #include "snn/math/tensor.hpp"
 
 namespace snn {
 namespace dataset {
-namespace spiral {
 
-dataset4 generate(shapeType samples = 1000, bool sin_cos = false);
+typedef std::pair<tensor<real>, tensor<real>> dataset2;
+typedef std::tuple<tensor<real>, tensor<real>, tensor<real>, tensor<real>> dataset4;
 
-} // namespace spiral
 } // namespace dataset
 } // namespace snn

@@ -6,6 +6,24 @@ code in C++ (cpp17) that is powerful enough to give decent
 results in [MNIST dataset](http://yann.lecun.com/exdb/mnist/).
 You can download the dataset manually or run [download_mnist.py](download_mnist.py).
 
+The project is inspired by the simplicity of Keras. Creating a network for MNIST.
+
+Code snippet:
+```cpp
+    models::sequential m;
+    m.add("dense(units=300, input=784)");
+    m.add("dense(units=10)");
+    m.compile("loss=cross_entropy(), optimizer=sgd(learning_rate=0.5)");
+    m.summary();
+```
+
+Console Output:
+![console_run](docs/plots/console_run.gif)
+
+See [demo_mnist.cpp](examples/demo_mnist.cpp) for full code.
+
+---
+
 *	[Features](#features)
 *	[Results](#results)
 *	[Project structure](#project-structure)
@@ -16,25 +34,27 @@ You can download the dataset manually or run [download_mnist.py](download_mnist.
 [](#features)
 ## Currently Supported Features
 
-### Layers
+### 1. Save/Load Models
+
+### 2. Layers
 *	Dense Layer
 
-### Activators
+### 3. Activators
 *	sigmoid
 *	tanh
 *	relu
 
-### Loss Functions
+### 4. Loss Functions
 *	quadratic
 *	hillinger
 *	cross-entropy
 
-### Initializers
+### 5. Variable Initializers
 *	zeros
 *	normal
 *	xavier
 
-### Optimizers
+### 6. Optimizers
 *	SGD
 
 ---
@@ -42,20 +62,13 @@ You can download the dataset manually or run [download_mnist.py](download_mnist.
 [](#results)
 ## Results
 
-The project is inspired by Keras. So, I tried to keep it very simple. Creating a network for MNIST.
-```cpp
-    models::sequential m;
-    m.add("dense(units=300, input=784)");
-    m.add("dense(units=10)");
-    m.compile("loss=cross_entropy(), optimizer=sgd(learning_rate=0.5)");
-```
-see [demo_mnist.cpp](examples/demo_mnist.cpp) for full code.
-
 Experiment:
 * Dataset: MNIST
 * Hidden Layers: 1 Dense Layer (300 neurons)
 * Learning Rate: 0.5 (Decay = 0)
 * Batch Size: 32
+
+See [demo_mnist.cpp](examples/demo_mnist.cpp) for full code.
 
 Here is a comparision of different Loss-Functions (test-accuracy)
 ![alt text](docs/plots/loss_functions.svg)

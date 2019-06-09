@@ -11,8 +11,8 @@ class layer : public layers::base_layer {
 
 public:
     void create(const kwargs&);
-    
-	size_t output() const override;
+
+    size_t output() const override;
     std::string name() const override;
     size_t params() const override;
     void set_optimizer(const kwargs&) override;

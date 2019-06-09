@@ -17,7 +17,7 @@ int main() {
 
     auto [trainX, trainY, testX, testY] = dataset::spiral::generate(8192, false);
 
-	const int epochs = 256;
+    const int epochs = 256;
     for (int epoch = 1; epoch <= epochs; epoch++) {
         cout << "Epoch: " << epoch << '/' << epochs << endl;
         m.run(trainX, trainY, "batch_size=64");

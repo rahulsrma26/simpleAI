@@ -4,8 +4,7 @@ namespace snn {
 namespace dataset {
 namespace spiral {
 
-std::tuple<tensor<real>, tensor<real>, tensor<real>, tensor<real>>
-generate(shapeType samples, bool sin_cos) {
+dataset4 generate(shapeType samples, bool sin_cos) {
     constexpr real pi = 3.14159265358979f;
     std::vector<real> trainX, trainY, testX, testY;
 

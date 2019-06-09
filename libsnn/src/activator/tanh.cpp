@@ -9,9 +9,7 @@ std::string tanh::type() { return TEXT::TANH; }
 
 std::string tanh::name() const { return this->type(); }
 
-tensor<real> tanh::f(const tensor<real>& t) const {
-    return math::tanh(t);
-}
+tensor<real> tanh::f(const tensor<real>& t) const { return math::tanh(t); }
 
 tensor<real> tanh::df(const tensor<real>& t) const {
     auto r = math::tanh(t);

@@ -96,12 +96,11 @@ tensor<real> dense::backward(tensor<real>& pre_gradients) {
     return next_grad;
 }
 
-
 void dense::save(std::ostream& os, bool save_gradient) const {
     weight_m.save(os, save_gradient);
     os.write(reinterpret_cast<const char*>(&use_bias_m), sizeof(bool));
     if (use_bias_m)
-		bias_m.save(os, save_gradient);
+        bias_m.save(os, save_gradient);
     activator_m.save(os);
     os.write(reinterpret_cast<const char*>(&inputs_m), sizeof(size_t));
     os.write(reinterpret_cast<const char*>(&outputs_m), sizeof(size_t));

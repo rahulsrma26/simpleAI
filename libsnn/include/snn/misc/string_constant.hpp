@@ -40,6 +40,6 @@ const std::string VERBOSE("verbose");
 const std::string XAVIER("xavier");
 const std::string ZEROS("zeros");
 
-} // namespace string_constant
+} // namespace TEXT
 
 } // namespace snn

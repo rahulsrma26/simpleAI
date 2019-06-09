@@ -153,7 +153,7 @@ void sequential::save(std::ostream& os, bool save_gradient) const {
     loss_m.save(os);
 };
 
-void sequential::load(std::istream& is){
+void sequential::load(std::istream& is) {
     is >> variable_random_engine;
     uint32_t num_layers;
     is.read(reinterpret_cast<char*>(&num_layers), sizeof(uint32_t));
