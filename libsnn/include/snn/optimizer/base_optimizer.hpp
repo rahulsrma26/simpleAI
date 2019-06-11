@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include "snn/nntypes.hpp"
 #include "snn/misc/kwargs.hpp"
 #include "snn/math/tensor.hpp"

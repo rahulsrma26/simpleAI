@@ -16,18 +16,9 @@ std::string momentum::name() const { return this->type(); }
 void momentum::update(tensor<real>& t, const tensor<real>& g) {
     const size_t n = t.size();
     const real lr = learning_rate_m;
-#pragma omp parallel if (n >= OPENMP_SMALL_THRESHOLD)
-    {
-#pragma omp for simd
-        for (size_t i = 0; i < n; i++)
-            velocity_m[i] = moment_m * velocity_m[i] - lr * g[i];
-    }
-#pragma omp parallel if (n >= OPENMP_SMALL_THRESHOLD)
-    {
-#pragma omp for simd
-        for (size_t i = 0; i < n; i++)
-            t[i] += velocity_m[i];
-    }
+#pragma omp parallel for if (n >= OPENMP_SMALL_THRESHOLD)
+    for (size_t i = 0; i < n; i++)
+        t[i] += (velocity_m[i] = moment_m * velocity_m[i] - lr * g[i]);
     learning_rate_m *= (1.0 - decay_m);
 }
 
