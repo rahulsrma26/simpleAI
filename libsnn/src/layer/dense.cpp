@@ -57,6 +57,22 @@ tensor<real> dense::forward(tensor<real>& prev_activation) {
     return activator_m.f(weighted_input_m);
 }
 
+tensor<real> dense::predict(tensor<real>& input) {
+    const auto batch_size = input.get_shape().front();
+    tensor<real> output({batch_size, (shapeType)outputs_m});
+
+#pragma omp parallel for
+    for (size_t i = 0; i < batch_size; i++) {
+        for (size_t j = 0; j < outputs_m; j++) {
+            real sum = use_bias_m ? bias_m.var[j] : 0.0;
+            for (size_t k = 0; k < inputs_m; k++)
+                sum += input[i * inputs_m + k] * weight_m.var[j * inputs_m + k];
+            output[i * outputs_m + j] = sum;
+        }
+    }
+    return activator_m.f(output);
+}
+
 tensor<real> dense::backward(tensor<real>& pre_gradients) {
     auto delta = activator_m.df(weighted_input_m);
     delta *= pre_gradients;

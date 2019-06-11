@@ -19,6 +19,7 @@ public:
     virtual void set_optimizer(const kwargs&) = 0;
     virtual tensor<real> forward(tensor<real>&) = 0;
     virtual tensor<real> backward(tensor<real>&) = 0;
+    virtual tensor<real> predict(tensor<real>&) = 0;
     virtual void save(std::ostream& os, bool save_gradient) const = 0;
 };
 

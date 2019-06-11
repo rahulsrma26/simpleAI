@@ -108,7 +108,7 @@ void sequential::run(const tensor<real>& x, const tensor<real>& y, const kwargs&
 
         auto z = bx;
         for (size_t i = 0; i < layers_m.size(); i++)
-            z = layers_m[i].forward(z);
+            z = train ? layers_m[i].forward(z) : layers_m[i].predict(z);
 
         auto batch_loss = loss_m.f(z, by);
         avg_loss += batch_loss * batch_size;
@@ -140,7 +140,7 @@ tensor<real> sequential::predict(const tensor<real>& x, const kwargs& args) {
     std::ignore = args;
     auto y = x;
     for (auto& layer : layers_m)
-        y = layer.forward(y);
+        y = layer.predict(y);
     return y;
 }
 

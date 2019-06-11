@@ -6,6 +6,8 @@ void layer::create(const kwargs& args) {
     auto [type, sub_args] = args.get_function("");
     if (type == layers::dense::type())
         layer_m = std::make_unique<layers::dense>(sub_args);
+    else if (type == layers::dropout::type())
+        layer_m = std::make_unique<layers::dropout>(sub_args);
     else
         throw std::runtime_error("Invalid activator type: " + type);
 }
@@ -17,6 +19,8 @@ void layer::load(std::istream& is) {
     is.read(reinterpret_cast<char*>(&type[0]), type_length);
     if (type == layers::dense::type())
         layer_m = std::make_unique<layers::dense>(is);
+    else if (type == layers::dropout::type())
+        layer_m = std::make_unique<layers::dropout>(is);
     else
         throw std::runtime_error("Invalid activator type: " + type);
 }
@@ -39,6 +43,10 @@ void layer::set_optimizer(const kwargs& args) { return layer_m->set_optimizer(ar
 
 tensor<real> layer::forward(tensor<real>& prev_activation) {
     return layer_m->forward(prev_activation);
+}
+
+tensor<real> layer::predict(tensor<real>& input) {
+    return layer_m->predict(input);
 }
 
 tensor<real> layer::backward(tensor<real>& pre_gradients) {

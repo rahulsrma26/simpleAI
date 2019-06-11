@@ -12,6 +12,7 @@ std::string relu::name() const { return this->type(); }
 tensor<real> relu::f(const tensor<real>& t) const {
     tensor<real> r(t.get_shape());
     const auto n = t.size();
+#pragma omp parallel for simd if (n >= OPENMP_SMALL_THRESHOLD)
     for (size_t i = 0; i < n; i++)
         r[i] = t[i] > 0 ? t[i] : 0;
     return r;
@@ -20,6 +21,7 @@ tensor<real> relu::f(const tensor<real>& t) const {
 tensor<real> relu::df(const tensor<real>& t) const {
     tensor<real> r(t.get_shape());
     const auto n = t.size();
+#pragma omp parallel for simd if (n >= OPENMP_SMALL_THRESHOLD)
     for (size_t i = 0; i < n; i++)
         r[i] = t[i] > 0 ? 1 : 0;
     return r;

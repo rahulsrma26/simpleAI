@@ -5,15 +5,14 @@
 namespace snn {
 namespace layers {
 
-class dense : public base_layer{
-    variable weight_m, bias_m;
-    tensor<real> input_m, weighted_input_m;
-    activator activator_m;
-    bool use_bias_m;
-    size_t inputs_m, outputs_m;
+class dropout : public base_layer{
+    tensor<real> weight_m;
+    double rate_m;
+    size_t inputs_m;
+    std::bernoulli_distribution generator_m;
 
 public:
-    dense(const kwargs&);
+    dropout(const kwargs&);
     static std::string type();
     virtual std::string name() const override;
     virtual size_t output() const override;
@@ -23,7 +22,7 @@ public:
     virtual tensor<real> backward(tensor<real>&) override;
     virtual tensor<real> predict(tensor<real>&) override;
     virtual void save(std::ostream& os, bool save_gradient) const override;
-    dense(std::istream& is);
+    dropout(std::istream& is);
 };
 
 } // namespace layers

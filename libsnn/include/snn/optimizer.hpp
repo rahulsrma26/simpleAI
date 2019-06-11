@@ -3,6 +3,10 @@
 #include <memory>
 #include "snn/optimizer/base_optimizer.hpp"
 #include "snn/optimizer/sgd.hpp"
+#include "snn/optimizer/momentum.hpp"
+#include "snn/optimizer/adagrad.hpp"
+#include "snn/optimizer/rmsprop.hpp"
+#include "snn/optimizer/adam.hpp"
 
 namespace snn {
 

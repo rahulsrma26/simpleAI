@@ -21,8 +21,8 @@ void sgd::update(tensor<real>& t, const tensor<real>& g) {
 #pragma omp for simd
         for (size_t i = 0; i < n; i++)
             t[i] -= lr * g[i];
-        learning_rate_m *= (1.0 - decay_m);
     }
+    learning_rate_m *= (1.0 - decay_m);
 }
 
 void sgd::save(std::ostream& os, bool save_gradient) const {

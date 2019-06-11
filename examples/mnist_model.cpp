@@ -28,11 +28,14 @@ int main(int argc, char* argv[]) {
         cout << "Pre-trained model loaded from disk." << endl;
     } else {
         seed(12345);
-        string learning_rate = argc >= 4 ? argv[3] : "0.1";
+        string learning_rate = argc >= 4 ? argv[3] : "0.001";
         string loss = argc >= 5 ? argv[4] : "cross_entropy";
-        m.add("dense(units=300, input=784)");
+        m.add("dense(units=400, input=784)");
+        m.add("dropout(rate=0.3, activation=relu())");
+        m.add("dense(units=50)");
+        m.add("dropout(rate=0.5, activation=relu())");
         m.add("dense(units=10)");
-        m.compile("loss=" + loss + "(), optimizer=sgd(learning_rate=" + learning_rate + ")");
+        m.compile("loss=" + loss + "(), optimizer=adam(learning_rate=" + learning_rate + ")");
         m.summary();
     }
 

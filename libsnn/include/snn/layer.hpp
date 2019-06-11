@@ -3,6 +3,7 @@
 #include <memory>
 #include "snn/layer/base_layer.hpp"
 #include "snn/layer/dense.hpp"
+#include "snn/layer/dropout.hpp"
 
 namespace snn {
 
@@ -18,6 +19,7 @@ public:
     void set_optimizer(const kwargs&) override;
     tensor<real> forward(tensor<real>&) override;
     tensor<real> backward(tensor<real>&) override;
+    tensor<real> predict(tensor<real>&) override;
     void save(std::ostream& os, bool save_gradient) const override;
     void load(std::istream& is);
 };
