@@ -14,7 +14,7 @@ class base_layer {
 
 public:
     virtual std::string name() const = 0;
-    virtual size_t output() const = 0;
+    virtual shape output() const = 0;
     virtual size_t params() const = 0;
     virtual void set_optimizer(const kwargs&) = 0;
     virtual tensor<real> forward(tensor<real>&) = 0;

@@ -2,20 +2,24 @@
 
 namespace snn {
 
+template <typename... Ts>
+std::unique_ptr<optimizers::base_optimizer> get_optimizer_from_type(const std::string& type, Ts... args) {
+    if (type == optimizers::sgd::type())
+        return std::make_unique<optimizers::sgd>(args...);
+    else if (type == optimizers::momentum::type())
+        return std::make_unique<optimizers::momentum>(args...);
+    else if (type == optimizers::adagrad::type())
+        return std::make_unique<optimizers::adagrad>(args...);
+    else if (type == optimizers::rmsprop::type())
+        return std::make_unique<optimizers::rmsprop>(args...);
+    else if (type == optimizers::adam::type())
+        return std::make_unique<optimizers::adam>(args...);
+    throw std::runtime_error("Invalid optimizer type: " + type);
+}
+
 void optimizer::create(const tensor<real>& t, const kwargs& args) {
     auto [type, sub_args] = args.get_function("");
-    if (type == optimizers::sgd::type())
-        optimizer_m = std::make_unique<optimizers::sgd>(t, sub_args);
-    else if (type == optimizers::momentum::type())
-        optimizer_m = std::make_unique<optimizers::momentum>(t, sub_args);
-    else if (type == optimizers::adagrad::type())
-        optimizer_m = std::make_unique<optimizers::adagrad>(t, sub_args);
-    else if (type == optimizers::rmsprop::type())
-        optimizer_m = std::make_unique<optimizers::rmsprop>(t, sub_args);
-    else if (type == optimizers::adam::type())
-        optimizer_m = std::make_unique<optimizers::adam>(t, sub_args);
-    else
-        throw std::runtime_error("Invalid optimizer type: " + type);
+    optimizer_m = get_optimizer_from_type<const tensor<real>&, const kwargs&>(type, t, sub_args);
 }
 
 void optimizer::load(std::istream& is) {
@@ -23,18 +27,7 @@ void optimizer::load(std::istream& is) {
     is.read(reinterpret_cast<char*>(&type_length), sizeof(uint32_t));
     std::string type(type_length, ' ');
     is.read(reinterpret_cast<char*>(&type[0]), type_length);
-    if (type == optimizers::sgd::type())
-        optimizer_m = std::make_unique<optimizers::sgd>(is);
-    else if (type == optimizers::momentum::type())
-        optimizer_m = std::make_unique<optimizers::momentum>(is);
-    else if (type == optimizers::adagrad::type())
-        optimizer_m = std::make_unique<optimizers::adagrad>(is);
-    else if (type == optimizers::rmsprop::type())
-        optimizer_m = std::make_unique<optimizers::rmsprop>(is);
-    else if (type == optimizers::adam::type())
-        optimizer_m = std::make_unique<optimizers::adam>(is);
-    else
-        throw std::runtime_error("Invalid optimizer type: " + type);
+    optimizer_m = get_optimizer_from_type<std::istream&>(type, is);
 };
 
 void optimizer::save(std::ostream& os, bool save_gradient) const {

@@ -4,7 +4,7 @@ namespace snn {
 namespace layers {
 
 dense::dense(const kwargs& args) : input_m({1}), weighted_input_m({1}), use_bias_m(true) {
-    inputs_m = (size_t)args.get_int(TEXT::INPUT);
+    inputs_m = args.get_int_vector(TEXT::INPUT).front();
     outputs_m = (size_t)args.get_int(TEXT::UNITS);
 
     activator_m.create(args.get(TEXT::ACTIVATION, TEXT::SIGMOID + "()"));
@@ -29,7 +29,7 @@ std::string dense::type() { return TEXT::DENSE; }
 
 std::string dense::name() const { return this->type(); }
 
-size_t dense::output() const { return outputs_m; }
+shape dense::output() const { return {(shapeType)outputs_m}; }
 
 size_t dense::params() const { return weight_m.var.size() + bias_m.var.size(); }
 
@@ -78,11 +78,13 @@ tensor<real> dense::backward(tensor<real>& pre_gradients) {
     delta *= pre_gradients;
     const auto batch_size = input_m.get_shape().front();
 
-    tensor<real> bias_grad({(shapeType)outputs_m});
-    for (size_t i = 0; i < batch_size; i++)
-        for (size_t j = 0; j < outputs_m; j++)
-            bias_grad[j] += delta[i * outputs_m + j];
-    bias_m.optimize(bias_grad);
+    if(use_bias_m){
+        tensor<real> bias_grad({(shapeType)outputs_m});
+        for (size_t i = 0; i < batch_size; i++)
+            for (size_t j = 0; j < outputs_m; j++)
+                bias_grad[j] += delta[i * outputs_m + j];
+        bias_m.optimize(bias_grad);
+    }
 
     tensor<real> next_grad({batch_size, (shapeType)inputs_m});
 #pragma omp parallel if (batch_size >= OPENMP_LARGE_THRESHOLD)

@@ -2,16 +2,20 @@
 
 namespace snn {
 
+template <class T>
+std::unique_ptr<losses::base_loss> get_loss_from_type(const std::string& type, T args) {
+    if (type == losses::quadratic::type())
+        return std::make_unique<losses::quadratic>(args);
+    else if (type == losses::hillinger::type())
+        return std::make_unique<losses::hillinger>(args);
+    else if (type == losses::cross_entropy::type())
+        return std::make_unique<losses::cross_entropy>(args);
+    throw std::runtime_error("Invalid loss type: " + type);
+}
+
 void loss::create(const kwargs& args) {
     auto [type, sub_args] = args.get_function("");
-    if (type == losses::quadratic::type())
-        loss_m = std::make_unique<losses::quadratic>(sub_args);
-    else if (type == losses::hillinger::type())
-        loss_m = std::make_unique<losses::hillinger>(sub_args);
-    else if (type == losses::cross_entropy::type())
-        loss_m = std::make_unique<losses::cross_entropy>(sub_args);
-    else
-        throw std::runtime_error("Invalid loss type: " + type);
+    loss_m = get_loss_from_type<const kwargs&>(type, sub_args);
 }
 
 void loss::load(std::istream& is) {
@@ -19,14 +23,7 @@ void loss::load(std::istream& is) {
     is.read(reinterpret_cast<char*>(&type_length), sizeof(uint32_t));
     std::string type(type_length, ' ');
     is.read(reinterpret_cast<char*>(&type[0]), type_length);
-    if (type == losses::quadratic::type())
-        loss_m = std::make_unique<losses::quadratic>(is);
-    else if (type == losses::hillinger::type())
-        loss_m = std::make_unique<losses::hillinger>(is);
-    else if (type == losses::cross_entropy::type())
-        loss_m = std::make_unique<losses::cross_entropy>(is);
-    else
-        throw std::runtime_error("Invalid loss type: " + type);
+    loss_m = get_loss_from_type<std::istream&>(type, is);
 };
 
 void loss::save(std::ostream& os) const {

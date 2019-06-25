@@ -5,14 +5,12 @@
 namespace snn {
 namespace layers {
 
-class dropout : public base_layer{
-    tensor<real> weight_m;
-    double rate_m;
-    shape inputs_m;
-    std::bernoulli_distribution generator_m;
+class flatten : public base_layer{
+    shapeType input_shape_m;
+    shape saved_shape;
 
 public:
-    dropout(const kwargs&);
+    flatten(const kwargs&);
     static std::string type();
     virtual std::string name() const override;
     virtual shape output() const override;
@@ -22,7 +20,7 @@ public:
     virtual tensor<real> backward(tensor<real>&) override;
     virtual tensor<real> predict(tensor<real>&) override;
     virtual void save(std::ostream& os, bool save_gradient) const override;
-    dropout(std::istream& is);
+    flatten(std::istream& is);
 };
 
 } // namespace layers

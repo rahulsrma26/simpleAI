@@ -2,18 +2,21 @@
 
 namespace snn {
 
-// Todo: template<class T>
+template <class T>
+std::unique_ptr<activators::base_activator> get_activator_from_type(const std::string& type,
+                                                                    T args) {
+    if (type == activators::sigmoid::type())
+        return std::make_unique<activators::sigmoid>(args);
+    else if (type == activators::relu::type())
+        return std::make_unique<activators::relu>(args);
+    else if (type == activators::tanh::type())
+        return std::make_unique<activators::tanh>(args);
+    throw std::runtime_error("Invalid activator type: " + type);
+}
 
 void activator::create(const kwargs& args) {
     auto [type, sub_args] = args.get_function("");
-    if (type == activators::sigmoid::type())
-        activator_m = std::make_unique<activators::sigmoid>(sub_args);
-    else if (type == activators::relu::type())
-        activator_m = std::make_unique<activators::relu>(sub_args);
-    else if (type == activators::tanh::type())
-        activator_m = std::make_unique<activators::tanh>(sub_args);
-    else
-        throw std::runtime_error("Invalid activator type: " + type);
+    activator_m = get_activator_from_type<const kwargs&>(type, sub_args);
 }
 
 void activator::load(std::istream& is) {
@@ -21,14 +24,7 @@ void activator::load(std::istream& is) {
     is.read(reinterpret_cast<char*>(&type_length), sizeof(uint32_t));
     std::string type(type_length, ' ');
     is.read(reinterpret_cast<char*>(&type[0]), type_length);
-    if (type == activators::sigmoid::type())
-        activator_m = std::make_unique<activators::sigmoid>(is);
-    else if (type == activators::relu::type())
-        activator_m = std::make_unique<activators::relu>(is);
-    else if (type == activators::tanh::type())
-        activator_m = std::make_unique<activators::tanh>(is);
-    else
-        throw std::runtime_error("Invalid loss type: " + type);
+    activator_m = get_activator_from_type<std::istream&>(type, is);
 };
 
 void activator::save(std::ostream& os) const {

@@ -2,14 +2,20 @@
 
 namespace snn {
 
+template <class T>
+std::unique_ptr<layers::base_layer> get_layer_from_type(const std::string& type, T args) {
+    if (type == layers::dense::type())
+        return std::make_unique<layers::dense>(args);
+    else if (type == layers::dropout::type())
+        return std::make_unique<layers::dropout>(args);
+    else if (type == layers::flatten::type())
+        return std::make_unique<layers::flatten>(args);
+    throw std::runtime_error("Invalid layer type: " + type);
+}
+
 void layer::create(const kwargs& args) {
     auto [type, sub_args] = args.get_function("");
-    if (type == layers::dense::type())
-        layer_m = std::make_unique<layers::dense>(sub_args);
-    else if (type == layers::dropout::type())
-        layer_m = std::make_unique<layers::dropout>(sub_args);
-    else
-        throw std::runtime_error("Invalid activator type: " + type);
+    layer_m = get_layer_from_type<const kwargs&>(type, sub_args);
 }
 
 void layer::load(std::istream& is) {
@@ -17,12 +23,7 @@ void layer::load(std::istream& is) {
     is.read(reinterpret_cast<char*>(&type_length), sizeof(uint32_t));
     std::string type(type_length, ' ');
     is.read(reinterpret_cast<char*>(&type[0]), type_length);
-    if (type == layers::dense::type())
-        layer_m = std::make_unique<layers::dense>(is);
-    else if (type == layers::dropout::type())
-        layer_m = std::make_unique<layers::dropout>(is);
-    else
-        throw std::runtime_error("Invalid activator type: " + type);
+    layer_m = get_layer_from_type<std::istream&>(type, is);
 }
 
 void layer::save(std::ostream& os, bool save_gradient) const {
@@ -35,7 +36,7 @@ void layer::save(std::ostream& os, bool save_gradient) const {
 
 std::string layer::name() const { return layer_m->name(); }
 
-size_t layer::output() const { return layer_m->output(); }
+shape layer::output() const { return layer_m->output(); }
 
 size_t layer::params() const { return layer_m->params(); }
 
@@ -45,9 +46,7 @@ tensor<real> layer::forward(tensor<real>& prev_activation) {
     return layer_m->forward(prev_activation);
 }
 
-tensor<real> layer::predict(tensor<real>& input) {
-    return layer_m->predict(input);
-}
+tensor<real> layer::predict(tensor<real>& input) { return layer_m->predict(input); }
 
 tensor<real> layer::backward(tensor<real>& pre_gradients) {
     return layer_m->backward(pre_gradients);

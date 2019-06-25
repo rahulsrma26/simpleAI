@@ -9,7 +9,7 @@ void sequential::add(const kwargs& args) {
         layers_m.emplace_back();
         layers_m.back().create(args);
     } else {
-        sub_args.set(TEXT::INPUT, std::to_string(layers_m.back().output()));
+        sub_args.set_int_vector(TEXT::INPUT, layers_m.back().output());
         layers_m.emplace_back();
         auto nargs = type + "(" + sub_args.to_string() + ")";
         layers_m.back().create(nargs);
@@ -29,7 +29,12 @@ void sequential::summary() {
     printf("------------------------------------------\n");
     size_t total = 0;
     for (auto& layer : layers_m) {
-        printf("%20s %9d %11d \n", layer.name().c_str(), (int)layer.output(), (int)layer.params());
+        auto output = layer.output();
+        std::stringstream ss;
+        ss << output[0];
+        for (int i = 1; i < output.size(); i++)
+            ss << 'x' << output[i];
+        printf("%20s %9s %11d \n", layer.name().c_str(), ss.str().c_str(), (int)layer.params());
         total += layer.params();
     }
     printf("==========================================\n");

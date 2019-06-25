@@ -4,6 +4,7 @@
 #include "snn/layer/base_layer.hpp"
 #include "snn/layer/dense.hpp"
 #include "snn/layer/dropout.hpp"
+#include "snn/layer/flatten.hpp"
 
 namespace snn {
 
@@ -13,7 +14,7 @@ class layer : public layers::base_layer {
 public:
     void create(const kwargs&);
 
-    size_t output() const override;
+    shape output() const override;
     std::string name() const override;
     size_t params() const override;
     void set_optimizer(const kwargs&) override;

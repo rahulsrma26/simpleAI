@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <unordered_map>
 
 namespace snn {
 
@@ -14,6 +15,8 @@ const std::string BATCH_SIZE("batch_size");
 const std::string BETA1("beta1");
 const std::string BETA2("beta2");
 const std::string BIAS_INITIALIZER("bias_initializer");
+const std::string CHANNELS("channels");
+const std::string CONV2D("conv2d");
 const std::string CROSS_ENTROPY("cross_entropy");
 const std::string DECAY("decay");
 const std::string DECAY_RATE("decay_rate");
@@ -21,6 +24,8 @@ const std::string DENSE("dense");
 const std::string DROPOUT("dropout");
 const std::string EPSILON("epsilon");
 const std::string FALSE("false");
+const std::string FILTER("filter");
+const std::string FLATTEN("flatten");
 const std::string HILLINGER("hillinger");
 const std::string KEEP_PROBABILITY("keep_probability");
 const std::string KERNEL_INITIALIZER("kernel_initializer");
@@ -33,10 +38,12 @@ const std::string MOMENT("moment");
 const std::string MOMENTUM("momentum");
 const std::string NORMAL("normal");
 const std::string OPTIMIZER("optimizer");
+const std::string PADDING("padding");
 const std::string QUADRATIC("quadratic");
 const std::string RATE("rate");
 const std::string RELU("relu");
 const std::string RMSPROP("rmsprop");
+const std::string SAME("same");
 const std::string SGD("sgd");
 const std::string SHAPE("shape");
 const std::string SHUFFLE("shuffle");
@@ -48,6 +55,7 @@ const std::string TRUE("true");
 const std::string UNIFORM("uniform");
 const std::string UNITS("units");
 const std::string USE_BIAS("use_bias");
+const std::string VALID("valid");
 const std::string VERBOSE("verbose");
 const std::string XAVIER("xavier");
 const std::string ZEROS("zeros");

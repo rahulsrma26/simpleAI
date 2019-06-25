@@ -4,7 +4,7 @@ namespace snn {
 namespace layers {
 
 dropout::dropout(const kwargs& args) : weight_m({1}) {
-    inputs_m = (size_t)args.get_int(TEXT::INPUT);
+    inputs_m = args.get_int_vector(TEXT::INPUT);
     rate_m = (size_t)args.get_double(TEXT::RATE);
     generator_m = std::bernoulli_distribution(1 - rate_m);
 }
@@ -13,7 +13,7 @@ std::string dropout::type() { return TEXT::DROPOUT; }
 
 std::string dropout::name() const { return this->type(); }
 
-size_t dropout::output() const { return inputs_m; }
+shape dropout::output() const { return inputs_m; }
 
 size_t dropout::params() const { return 0; }
 
@@ -54,12 +54,12 @@ tensor<real> dropout::backward(tensor<real>& pre_gradients) {
 
 void dropout::save(std::ostream& os, bool save_gradient) const {
     std::ignore = save_gradient;
-    os.write(reinterpret_cast<const char*>(&inputs_m), sizeof(inputs_m));
+    vector_to_stream(os, inputs_m);
     os.write(reinterpret_cast<const char*>(&rate_m), sizeof(rate_m));
 };
 
 dropout::dropout(std::istream& is) : weight_m({1}) {
-    is.read(reinterpret_cast<char*>(&inputs_m), sizeof(inputs_m));
+    inputs_m = vector_from_stream<shapeType>(is);
     is.read(reinterpret_cast<char*>(&rate_m), sizeof(rate_m));
     generator_m = std::bernoulli_distribution(1 - rate_m);
 };

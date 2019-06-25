@@ -16,7 +16,7 @@ public:
     dense(const kwargs&);
     static std::string type();
     virtual std::string name() const override;
-    virtual size_t output() const override;
+    virtual shape output() const override;
     virtual size_t params() const override;
     virtual void set_optimizer(const kwargs&) override;
     virtual tensor<real> forward(tensor<real>&) override;

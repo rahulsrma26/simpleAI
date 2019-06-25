@@ -25,7 +25,31 @@ static_assert(
 constexpr char PRINT_BEGIN = '[';
 constexpr char PRINT_END = ']';
 
-typedef uint16_t shapeType;
+template <class T>
+size_t vector_get_size(const std::vector<T>& s) {
+    size_t m = 1;
+    for (const auto& x : s)
+        m *= x;
+    return m;
+}
+
+template<class T>
+void vector_to_stream(std::ostream& os, const std::vector<T>& s) {
+    uint32_t ds = s.size();
+    os.write(reinterpret_cast<const char*>(&ds), sizeof(uint32_t));
+    os.write(reinterpret_cast<const char*>(s.data()), sizeof(T) * ds);
+}
+
+template<class T>
+std::vector<T> vector_from_stream(std::istream& is) {
+    uint32_t ds;
+    is.read(reinterpret_cast<char*>(&ds), sizeof(uint32_t));
+    std::vector<T> s(ds);
+    is.read(reinterpret_cast<char*>(s.data()), sizeof(T) * ds);
+    return s;
+}
+
+typedef int shapeType;
 typedef std::vector<shapeType> shape;
 
 template <class T>
@@ -37,8 +61,6 @@ class tensor {
 
     template <class Ch, class Tr>
     void print(std::basic_ostream<Ch, Tr>&, const shapeType, const size_t) const;
-
-    static size_t get_size(const shape&);
 
 public:
     tensor(const shape&);
@@ -128,7 +150,7 @@ public:
     template <class U>
     friend tensor<U> operator/(const tensor<U>&, const tensor<U>&);
 
-	template <class U>
+    template <class U>
     tensor<U> cast();
     void to_stream(std::ostream& os) const;
     static tensor<T> from_stream(std::istream& is);
@@ -145,7 +167,7 @@ std::basic_ostream<Ch, Tr>& operator<<(std::basic_ostream<Ch, Tr>&, const shape&
 
 template <class T>
 tensor<T>::tensor(const shape& dim) : dim_m(dim) {
-    auto n = get_size(dim_m);
+    auto n = vector_get_size(dim_m);
     if (!n)
         throw std::runtime_error("Invalid shape. Shape can not be zero.");
     data_m.resize(n);
@@ -153,7 +175,7 @@ tensor<T>::tensor(const shape& dim) : dim_m(dim) {
 
 template <class T>
 tensor<T>::tensor(shape&& dim) : dim_m(std::move(dim)) {
-    auto n = get_size(dim_m);
+    auto n = vector_get_size(dim_m);
     if (!n)
         throw std::runtime_error("Invalid shape. Shape can not be zero.");
     data_m.resize(n);
@@ -168,7 +190,7 @@ tensor<T>::tensor(tensor<T>&& other) noexcept
 
 template <typename T>
 tensor<T>::tensor(const shape& dim, const std::vector<T>& data) : dim_m(dim) {
-    auto n = get_size(dim_m);
+    auto n = vector_get_size(dim_m);
     if (!n)
         throw std::runtime_error("Invalid shape. Shape can not be zero.");
     if (n != data.size())
@@ -178,7 +200,7 @@ tensor<T>::tensor(const shape& dim, const std::vector<T>& data) : dim_m(dim) {
 
 template <typename T>
 tensor<T>::tensor(const shape& dim, std::vector<T>&& data) : dim_m(dim), data_m(std::move(data)) {
-    auto n = get_size(dim_m);
+    auto n = vector_get_size(dim_m);
     if (!n)
         throw std::runtime_error("Invalid shape. Shape can not be zero.");
     if (n != data_m.size())
@@ -277,7 +299,7 @@ tensor<T>& tensor<T>::squeeze(const shape& axis) {
         if (dim_m[i] != 1 || (axis.size() && std::find(axis.begin(), axis.end(), i) == axis.end()))
             new_dim.push_back(dim_m[i]);
     dim_m = std::move(new_dim);
-    if (dim_m.size() == 0 || get_size(dim_m) == 0)
+    if (dim_m.size() == 0 || vector_get_size(dim_m) == 0)
         dim_m = {1};
     return *this;
 }
@@ -664,19 +686,13 @@ typename std::vector<T>::const_reverse_iterator tensor<T>::crend() const noexcep
 
 template <class T>
 void tensor<T>::to_stream(std::ostream& os) const {
-    uint32_t ds = dim_m.size();
-    os.write(reinterpret_cast<const char*>(&ds), sizeof(uint32_t));
-    os.write(reinterpret_cast<const char*>(dim_m.data()), sizeof(shapeType) * ds);
+    vector_to_stream(os, dim_m);
     os.write(reinterpret_cast<const char*>(data_m.data()), sizeof(T) * data_m.size());
 }
 
 template <class T>
 tensor<T> tensor<T>::from_stream(std::istream& is) {
-    uint32_t ds;
-    is.read(reinterpret_cast<char*>(&ds), sizeof(uint32_t));
-    shape s(ds);
-    is.read(reinterpret_cast<char*>(s.data()), sizeof(shapeType) * ds);
-    tensor<T> t(std::move(s));
+    tensor<T> t(vector_from_stream<shapeType>(is));
     is.read(reinterpret_cast<char*>(t.data_m.data()), sizeof(T) * t.data_m.size());
     return t;
 }
@@ -745,14 +761,6 @@ std::basic_ostream<Ch, Tr>& operator<<(std::basic_ostream<Ch, Tr>& os, const sha
     for (size_t i = 0; i < s.size(); i++)
         os << (i ? " " : "") << s[i];
     return os << ')';
-}
-
-template <class T>
-size_t tensor<T>::get_size(const shape& s) {
-    size_t m = 1;
-    for (const auto& x : s)
-        m *= x;
-    return m;
 }
 
 } // namespace snn
