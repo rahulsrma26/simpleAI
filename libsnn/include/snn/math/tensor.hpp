@@ -7,6 +7,7 @@
 #include <type_traits>
 #include <stdexcept>
 #include <string>
+#include <sstream>
 
 namespace snn {
 
