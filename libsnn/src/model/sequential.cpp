@@ -29,13 +29,11 @@ void sequential::summary() {
     printf("------------------------------------------\n");
     size_t total = 0;
     for (auto& layer : layers_m) {
-        auto output = layer.output();
-        std::stringstream ss;
-        ss << output[0];
-        for (size_t i = 1; i < output.size(); i++)
-            ss << 'x' << output[i];
-        printf("%20s %9s %11d \n", layer.name().c_str(), ss.str().c_str(), (int)layer.params());
-        total += layer.params();
+        auto info = layer.info();
+        auto out = vector_to_string(layer.output());
+        int params = layer.params();
+        printf("%20s %9s %11d \n", info.c_str(), out.c_str(), params);
+        total += params;
     }
     printf("==========================================\n");
     std::cout << "Total parameters : " << total << std::endl;

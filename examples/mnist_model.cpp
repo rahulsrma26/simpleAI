@@ -28,10 +28,10 @@ int main(int argc, char* argv[]) {
         string learning_rate = argc >= 4 ? argv[3] : "0.001";
         string loss = argc >= 5 ? argv[4] : "cross_entropy";
         m.add("flatten(input=(28,28))");
-        m.add("dense(units=400)");
-        m.add("dropout(rate=0.3, activation=relu())");
-        m.add("dense(units=50)");
-        m.add("dropout(rate=0.5, activation=relu())");
+        m.add("dense(units=400, activation=relu())");
+        m.add("dropout(rate=0.3)");
+        m.add("dense(units=50, activation=relu())");
+        m.add("dropout(rate=0.5)");
         m.add("dense(units=10)");
         m.compile("loss=" + loss + "(), optimizer=adam(learning_rate=" + learning_rate + ")");
         m.summary();

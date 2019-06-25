@@ -34,6 +34,18 @@ size_t vector_get_size(const std::vector<T>& s) {
 }
 
 template <class T>
+std::string vector_to_string(const std::vector<T>& t) {
+    std::stringstream ss;
+    if (t.size())
+        ss << t[0];
+    else
+        ss << "EMPTY";
+    for (size_t i = 1; i < t.size(); i++)
+        ss << 'x' << t[i];
+    return ss.str();
+}
+
+template <class T>
 void vector_to_stream(std::ostream& os, const std::vector<T>& s) {
     uint32_t ds = s.size();
     os.write(reinterpret_cast<const char*>(&ds), sizeof(uint32_t));

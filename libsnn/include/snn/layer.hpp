@@ -16,6 +16,7 @@ public:
 
     shape output() const override;
     std::string name() const override;
+    std::string info() const override;
     size_t params() const override;
     void set_optimizer(const kwargs&) override;
     tensor<real> forward(tensor<real>&) override;

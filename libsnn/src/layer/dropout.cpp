@@ -5,13 +5,19 @@ namespace layers {
 
 dropout::dropout(const kwargs& args) : weight_m({1}) {
     inputs_m = args.get_int_vector(TEXT::INPUT);
-    rate_m = (size_t)args.get_double(TEXT::RATE);
+    rate_m = args.get_double(TEXT::RATE);
     generator_m = std::bernoulli_distribution(1 - rate_m);
 }
 
 std::string dropout::type() { return TEXT::DROPOUT; }
 
 std::string dropout::name() const { return this->type(); }
+
+std::string dropout::info() const {
+    std::stringstream ss;
+    ss << rate_m;
+    return name() + "(" + ss.str() + ")";
+}
 
 shape dropout::output() const { return inputs_m; }
 

@@ -13,6 +13,7 @@ public:
     flatten(const kwargs&);
     static std::string type();
     virtual std::string name() const override;
+    virtual std::string info() const override;
     virtual shape output() const override;
     virtual size_t params() const override;
     virtual void set_optimizer(const kwargs&) override;

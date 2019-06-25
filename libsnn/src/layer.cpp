@@ -36,6 +36,8 @@ void layer::save(std::ostream& os, bool save_gradient) const {
 
 std::string layer::name() const { return layer_m->name(); }
 
+std::string layer::info() const { return layer_m->info(); }
+
 shape layer::output() const { return layer_m->output(); }
 
 size_t layer::params() const { return layer_m->params(); }

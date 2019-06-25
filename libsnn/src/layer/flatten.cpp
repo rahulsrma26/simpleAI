@@ -11,6 +11,8 @@ std::string flatten::type() { return TEXT::FLATTEN; }
 
 std::string flatten::name() const { return this->type(); }
 
+std::string flatten::info() const { return name(); }
+
 shape flatten::output() const { return {input_shape_m}; }
 
 size_t flatten::params() const { return 0; }

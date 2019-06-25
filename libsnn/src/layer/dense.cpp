@@ -29,6 +29,8 @@ std::string dense::type() { return TEXT::DENSE; }
 
 std::string dense::name() const { return this->type(); }
 
+std::string dense::info() const { return name() + "(" + activator_m.name() + ")"; }
+
 shape dense::output() const { return {(shapeType)outputs_m}; }
 
 size_t dense::params() const { return weight_m.var.size() + bias_m.var.size(); }
