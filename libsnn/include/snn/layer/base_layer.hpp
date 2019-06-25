@@ -13,6 +13,7 @@ namespace layers {
 class base_layer {
 
 public:
+    virtual ~base_layer() = default;
     virtual std::string name() const = 0;
     virtual shape output() const = 0;
     virtual size_t params() const = 0;

@@ -26,3 +26,6 @@ target_link_libraries(test_layer libsnn)
 
 add_executable(test_model test_model.cpp)
 target_link_libraries(test_model libsnn)
+
+add_executable(test_tmath test_tmath.cpp)
+target_link_libraries(test_tmath libsnn)

@@ -42,8 +42,8 @@ void dense::set_optimizer(const kwargs& args) {
 tensor<real> dense::forward(tensor<real>& prev_activation) {
     // NxI x IxO = NxO
     input_m = std::move(prev_activation);
-    const auto batch_size = input_m.get_shape().front();
-    weighted_input_m = tensor<real>({batch_size, (shapeType)outputs_m});
+    const size_t batch_size = input_m.get_shape().front();
+    weighted_input_m = tensor<real>({(shapeType)batch_size, (shapeType)outputs_m});
 
 #pragma omp parallel for
     for (size_t i = 0; i < batch_size; i++) {
@@ -58,8 +58,8 @@ tensor<real> dense::forward(tensor<real>& prev_activation) {
 }
 
 tensor<real> dense::predict(tensor<real>& input) {
-    const auto batch_size = input.get_shape().front();
-    tensor<real> output({batch_size, (shapeType)outputs_m});
+    const size_t batch_size = input.get_shape().front();
+    tensor<real> output({(shapeType)batch_size, (shapeType)outputs_m});
 
 #pragma omp parallel for
     for (size_t i = 0; i < batch_size; i++) {
@@ -76,9 +76,9 @@ tensor<real> dense::predict(tensor<real>& input) {
 tensor<real> dense::backward(tensor<real>& pre_gradients) {
     auto delta = activator_m.df(weighted_input_m);
     delta *= pre_gradients;
-    const auto batch_size = input_m.get_shape().front();
+    const size_t batch_size = input_m.get_shape().front();
 
-    if(use_bias_m){
+    if (use_bias_m) {
         tensor<real> bias_grad({(shapeType)outputs_m});
         for (size_t i = 0; i < batch_size; i++)
             for (size_t j = 0; j < outputs_m; j++)
@@ -86,7 +86,7 @@ tensor<real> dense::backward(tensor<real>& pre_gradients) {
         bias_m.optimize(bias_grad);
     }
 
-    tensor<real> next_grad({batch_size, (shapeType)inputs_m});
+    tensor<real> next_grad({(shapeType)batch_size, (shapeType)inputs_m});
 #pragma omp parallel if (batch_size >= OPENMP_LARGE_THRESHOLD)
     {
         for (size_t i = 0; i < batch_size; i++)

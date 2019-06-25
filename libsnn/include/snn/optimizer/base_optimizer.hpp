@@ -11,6 +11,7 @@ namespace optimizers {
 class base_optimizer {
 
 public:
+    virtual ~base_optimizer() = default;
     virtual std::string name() const = 0;
     virtual void update(tensor<real>&, const tensor<real>&) = 0;
     virtual void save(std::ostream& os, bool save_gradient) const = 0;

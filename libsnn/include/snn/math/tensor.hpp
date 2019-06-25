@@ -33,14 +33,14 @@ size_t vector_get_size(const std::vector<T>& s) {
     return m;
 }
 
-template<class T>
+template <class T>
 void vector_to_stream(std::ostream& os, const std::vector<T>& s) {
     uint32_t ds = s.size();
     os.write(reinterpret_cast<const char*>(&ds), sizeof(uint32_t));
     os.write(reinterpret_cast<const char*>(s.data()), sizeof(T) * ds);
 }
 
-template<class T>
+template <class T>
 std::vector<T> vector_from_stream(std::istream& is) {
     uint32_t ds;
     is.read(reinterpret_cast<char*>(&ds), sizeof(uint32_t));
@@ -702,7 +702,7 @@ template <class Ch, class Tr>
 void tensor<T>::print(std::basic_ostream<Ch, Tr>& os, const shapeType dim, const size_t idx) const {
     const auto n = (size_t)dim_m[dim - 1];
     os << PRINT_BEGIN;
-    if (dim == dim_m.size()) {
+    if (dim == (shapeType)dim_m.size()) {
         if (n <= LOW_DIM_PRINT_LIMIT) {
             for (size_t i = idx; i < idx + n; i++)
                 os << (i == idx ? "" : " ") << data_m[i];
@@ -716,7 +716,7 @@ void tensor<T>::print(std::basic_ostream<Ch, Tr>& os, const shapeType dim, const
     } else {
         std::string spaces(dim, ' ');
         size_t inc = 1;
-        for (shapeType i = dim; i < dim_m.size(); i++)
+        for (size_t i = dim; i < dim_m.size(); i++)
             inc *= dim_m[i];
         if (n <= HIGH_DIM_PRINT_LIMIT) {
             for (size_t i = idx, j = 0; j < n; i += inc, j++) {

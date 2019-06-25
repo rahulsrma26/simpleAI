@@ -13,6 +13,7 @@ namespace initializers {
 class base_initializer {
 
 public:
+    virtual ~base_initializer() = default;
     virtual void init(tensor<real>&) = 0;
     virtual std::string name() const = 0;
 };

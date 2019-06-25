@@ -1,6 +1,7 @@
 #pragma once
 
 #include "snn/math/tensor.hpp"
+#include "snn/nntypes.hpp"
 #include <cmath>
 
 #if defined(_OPENMP)
@@ -27,15 +28,7 @@ tensor<T> tanh(const tensor<T>& t) {
 }
 
 template <class T>
-tensor<T> log(const tensor<T>& t) {
-    tensor<T> r(t.get_shape());
-    for (size_t i = 0; i < t.size(); i++)
-        r[i] = std::log(t[i]);
-    return r;
-}
-
-template <class T>
-tensor<T> log(const tensor<T>& t, T epsilon) {
+tensor<T> log(const tensor<T>& t, T epsilon = T(0)) {
     tensor<T> r(t.get_shape());
     for (size_t i = 0; i < t.size(); i++)
         r[i] = std::log(t[i] + epsilon);
@@ -43,7 +36,7 @@ tensor<T> log(const tensor<T>& t, T epsilon) {
 }
 
 template <class T>
-tensor<T> matmul(const tensor<T>& a, const tensor<T>& b) {
+tensor<T> matmul(const tensor<T>& a, const tensor<T>& b, const T bias = T(0)) {
     const auto a_dim = a.get_shape();
     if (a_dim.size() != 2)
         throw std::runtime_error("Invalid shape. First argument is not a 2D matrix.");
@@ -63,7 +56,7 @@ tensor<T> matmul(const tensor<T>& a, const tensor<T>& b) {
 #pragma omp parallel for
     for (size_t i = 0; i < n; i++)
         for (size_t j = 0; j < m; j++) {
-            T sum{0};
+            T sum{bias};
             for (size_t k = 0; k < p; k++)
                 sum += a[i * p + k] * b[k * m + j];
             c[i * m + j] = sum;
@@ -72,23 +65,7 @@ tensor<T> matmul(const tensor<T>& a, const tensor<T>& b) {
 }
 
 template <class T>
-tensor<T> transpose(const tensor<T>& a) {
-    const auto a_dim = a.get_shape();
-    if (a_dim.size() != 2)
-        throw std::runtime_error("Invalid shape. First argument is not a 2D matrix.");
-
-    const size_t r = a_dim[1];
-    const size_t c = a_dim[0];
-
-    tensor<T> b({(shapeType)(r), (shapeType)(c)});
-    for (size_t i = 0; i < r; i++)
-        for (size_t j = 0; j < c; j++)
-            b[i * c + j] = a[j * r + i];
-    return b;
-}
-
-template <class T>
-tensor<T> matmulT(const tensor<T>& a, const tensor<T>& bt) {
+tensor<T> matmulT_b(const tensor<T>& a, const tensor<T>& bt, const tensor<T>& bias) {
     const auto a_dim = a.get_shape();
     if (a_dim.size() != 2)
         throw std::runtime_error("Invalid shape. First argument is not a 2D matrix.");
@@ -100,20 +77,54 @@ tensor<T> matmulT(const tensor<T>& a, const tensor<T>& bt) {
     if (a_dim[1] != bt_dim[1])
         throw std::runtime_error("Invalid shape for matrix multiplication.");
 
+    const auto bias_dim = bias.get_shape();
+    if (bias_dim.size() != 1)
+        throw std::runtime_error("Invalid shape for bias. Bias is not a vector.");
+
+    if (bias_dim[0] != bt_dim[0])
+        throw std::runtime_error("Invalid shape for bias addition.");
+
     const size_t n = a_dim[0];
     const size_t p = a_dim[1];
     const size_t m = bt_dim[0];
 
     tensor<T> c({(shapeType)(n), (shapeType)(m)});
-#pragma omp parallel for
+#pragma omp parallel for if (n >= OPENMP_LARGE_THRESHOLD)
     for (size_t i = 0; i < n; i++)
         for (size_t j = 0; j < m; j++) {
-            T sum{0};
+            T sum{bias[j]};
             for (size_t k = 0; k < p; k++)
                 sum += a[i * p + k] * bt[j * p + k];
             c[i * m + j] = sum;
         }
     return c;
+}
+
+typedef std::pair<shapeType, shapeType> shapeBound;
+typedef std::vector<shapeBound> shapeBounds;
+
+template <typename T>
+tensor<T> pad(const tensor<T>& t, const shapeBounds& padding) {
+    const auto dim = t.get_shape();
+    const int n = dim.size();
+    if (padding.size() != (size_t)n)
+        throw std::runtime_error("Padding elements should be same as tensor dimensions.");
+    shape newShape(dim);
+    for (int i = 0; i < n; i++)
+        newShape[i] += padding[i].first + padding[i].second;
+
+    tensor<T> padded(newShape);
+#pragma omp parallel for if (n >= OPENMP_MINI_THRESHOLD)
+    for (size_t i = 0; i < t.size(); i++) {
+        int k1 = 0;
+        for (int j = n - 1, k = i, s = 1; j >= 0; j--) {
+            k1 += s * ((k % dim[j]) + padding[j].first);
+            k /= dim[j];
+            s *= newShape[j];
+        }
+        padded[k1] = t[i];
+    }
+    return padded;
 }
 
 } // namespace math

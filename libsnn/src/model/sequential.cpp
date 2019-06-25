@@ -32,7 +32,7 @@ void sequential::summary() {
         auto output = layer.output();
         std::stringstream ss;
         ss << output[0];
-        for (int i = 1; i < output.size(); i++)
+        for (size_t i = 1; i < output.size(); i++)
             ss << 'x' << output[i];
         printf("%20s %9s %11d \n", layer.name().c_str(), ss.str().c_str(), (int)layer.params());
         total += layer.params();
@@ -46,8 +46,8 @@ real get_correct_count(const tensor<real>& output, const tensor<real>& label) {
     const auto dim = output.get_shape();
     if (dim.size() != 2)
         throw std::runtime_error("not a valid tensor for accuracy.");
-    const auto data_points = dim.front();
-    const auto classes = dim.back();
+    const size_t data_points = dim.front();
+    const size_t classes = dim.back();
     if (classes == 1) {
         for (size_t i = 0; i < output.size(); i++)
             correct += (output[i] < 0.5 ? 0 : 1) == label[i];
