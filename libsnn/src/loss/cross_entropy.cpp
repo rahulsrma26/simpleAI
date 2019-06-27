@@ -12,9 +12,6 @@ std::string cross_entropy::type() { return TEXT::CROSS_ENTROPY; }
 std::string cross_entropy::name() const { return this->type(); }
 
 real cross_entropy::f(const tensor<real>& o, const tensor<real>& l) const {
-    if (o.get_shape() != l.get_shape())
-        throw std::runtime_error("Shapes not matching. Can not calculate loss.");
-
     real r = 0;
     for (size_t i = 0; i < o.size(); i++)
         r += o[i] * std::log(ce_eps + l[i]) + (1 - o[i]) * std::log(1 + ce_eps - l[i]);
@@ -22,9 +19,6 @@ real cross_entropy::f(const tensor<real>& o, const tensor<real>& l) const {
 }
 
 tensor<real> cross_entropy::df(const tensor<real>& o, const tensor<real>& l) const {
-    if (o.get_shape() != l.get_shape())
-        throw std::runtime_error("Shapes not matching. Can not calculate loss derivative.");
-
     tensor<real> r(o.get_shape());
     const auto n = o.get_shape().front();
     for (uint i = 0; i < o.size(); i++) {

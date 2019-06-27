@@ -12,9 +12,6 @@ std::string hillinger::type() { return TEXT::HILLINGER; }
 std::string hillinger::name() const { return this->type(); }
 
 real hillinger::f(const tensor<real>& o, const tensor<real>& l) const {
-    if (o.get_shape() != l.get_shape())
-        throw std::runtime_error("Shapes not matching. Can not calculate loss.");
-
     real r = 0;
     for (size_t i = 0; i < o.size(); i++) {
         const real d = std::sqrt(o[i]) - std::sqrt(l[i]);
@@ -24,9 +21,6 @@ real hillinger::f(const tensor<real>& o, const tensor<real>& l) const {
 }
 
 tensor<real> hillinger::df(const tensor<real>& o, const tensor<real>& l) const {
-    if (o.get_shape() != l.get_shape())
-        throw std::runtime_error("Shapes not matching. Can not calculate loss derivative.");
-
     tensor<real> r(o.get_shape());
     const auto n = o.get_shape().front();
     for (uint i = 0; i < o.size(); i++) {

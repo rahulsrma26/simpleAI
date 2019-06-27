@@ -127,5 +127,30 @@ tensor<T> pad(const tensor<T>& t, const shapeBounds& padding) {
     return padded;
 }
 
+template <typename T>
+T l2_norm(const tensor<T>& a, const tensor<T>& b) {
+    if (a.size() != b.size())
+        throw std::runtime_error("Size should be same for l2_norm.");
+    T r(0);
+    for (size_t i = 0; i < a.size(); i++)
+        r += (a[i] - b[i]) * (a[i] - b[i]);
+    return r;
+}
+
+template <typename T>
+tensor<T> batch_select(const tensor<T>& t, size_t batch, size_t index) {
+    auto dim = t.get_shape();
+    const size_t data_points = dim[0];
+    const size_t data_size = t.size() / data_points;
+    const size_t start_idx = batch * index;
+    const size_t end_idx = std::min(start_idx + batch, data_points);
+    dim[0] = end_idx - start_idx;
+    tensor<T> r(dim);
+    const auto n = r.size();
+    for (size_t i = 0, j = start_idx * data_size; i < n; i++, j++)
+        r[i] = t[j];
+    return r;
+}
+
 } // namespace math
 } // namespace snn

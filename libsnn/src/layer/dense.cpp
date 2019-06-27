@@ -33,7 +33,7 @@ std::string dense::info() const { return name() + "(" + activator_m.name() + ")"
 
 shape dense::output() const { return {(shapeType)outputs_m}; }
 
-size_t dense::params() const { return weight_m.var.size() + use_bias_m ? bias_m.var.size() : 0; }
+size_t dense::params() const { return weight_m.var.size() + (use_bias_m ? bias_m.var.size() : 0); }
 
 void dense::set_optimizer(const kwargs& args) {
     weight_m.set_optimizer(args);

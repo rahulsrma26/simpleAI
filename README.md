@@ -36,6 +36,8 @@ See [demo_mnist.cpp](examples/demo_mnist.cpp) for full code.
 ## Currently Supported Features
 
 ### 1. Save/Load Models
+*   Sequential
+*   Autoencoder
 
 ### 2. Layers
 *	Dense Layer
@@ -43,19 +45,19 @@ See [demo_mnist.cpp](examples/demo_mnist.cpp) for full code.
 *   Flatten Layer
 
 ### 3. Activators
-*	sigmoid
-*	tanh
-*	relu
+*	Sigmoid
+*	Tanh
+*	Relu
 
 ### 4. Loss Functions
-*	quadratic
-*	hillinger
-*	cross-entropy
+*	Quadratic
+*	Hillinger
+*	Cross-entropy
 
 ### 5. Variable Initializers
-*	zeros
-*	normal
-*	xavier
+*	Zeros
+*	Normal
+*	Xavier
 
 ### 6. Optimizers
 *	SGD
@@ -79,6 +81,17 @@ See [demo_mnist.cpp](examples/demo_mnist.cpp) for full code.
 
 Here is a comparision of different Loss-Functions (test-accuracy)
 ![alt text](docs/plots/loss_functions.svg)
+
+Autoencoder Experiment:
+* Dataset: MNIST
+* Autoencoder (784->256->32, 32->256->784)
+* Cross-entropy with Adam(learning_rate=0.001)
+* Batch Size: 32
+
+See [autoencoder_mnist.cpp](examples/autoencoder_mnist.cpp) for full code.
+
+Here is a reconstruction of some random examples.
+![alt text](docs/plots/autoencoder.png)
 
 ---
 

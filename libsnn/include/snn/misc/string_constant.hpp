@@ -18,6 +18,7 @@ const std::string BIAS_INITIALIZER("bias_initializer");
 const std::string CHANNELS("channels");
 const std::string CONV2D("conv2d");
 const std::string CROSS_ENTROPY("cross_entropy");
+const std::string DIST("dist");
 const std::string DECAY("decay");
 const std::string DECAY_RATE("decay_rate");
 const std::string DENSE("dense");

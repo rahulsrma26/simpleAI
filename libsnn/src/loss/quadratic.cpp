@@ -10,9 +10,6 @@ std::string quadratic::type() { return TEXT::QUADRATIC; }
 std::string quadratic::name() const { return this->type(); }
 
 real quadratic::f(const tensor<real>& o, const tensor<real>& l) const {
-    if (o.get_shape() != l.get_shape())
-        throw std::runtime_error("Shapes not matching. Can not calculate loss.");
-
     real r = 0;
     for (size_t i = 0; i < o.size(); i++)
         r += (o[i] - l[i]) * (o[i] - l[i]);
@@ -20,9 +17,6 @@ real quadratic::f(const tensor<real>& o, const tensor<real>& l) const {
 }
 
 tensor<real> quadratic::df(const tensor<real>& o, const tensor<real>& l) const {
-    if (o.get_shape() != l.get_shape())
-        throw std::runtime_error("Shapes not matching. Can not calculate loss derivative.");
-
     tensor<real> r(o.get_shape());
     const auto n = o.get_shape().front();
     for (uint i = 0; i < o.size(); i++)

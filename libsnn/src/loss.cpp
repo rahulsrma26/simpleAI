@@ -36,9 +36,19 @@ void loss::save(std::ostream& os) const {
 
 std::string loss::name() const { return loss_m->name(); }
 
-real loss::f(const tensor<real>& o, const tensor<real>& l) const { return loss_m->f(o, l); }
+real loss::f(const tensor<real>& o, const tensor<real>& l) const {
+    if (o.get_shape() != l.get_shape())
+        throw std::runtime_error("Output Shape " + vector_to_string(o.get_shape()) +
+                                 " != " + vector_to_string(l.get_shape()) +
+                                 " Lable Shape. Can not calculate loss.");
+    return loss_m->f(o, l);
+}
 
 tensor<real> loss::df(const tensor<real>& o, const tensor<real>& l) const {
+    if (o.get_shape() != l.get_shape())
+        throw std::runtime_error("Output Shape " + vector_to_string(o.get_shape()) +
+                                 " != " + vector_to_string(l.get_shape()) +
+                                 " Lable Shape. Can not calculate loss derivative.");
     return loss_m->df(o, l);
 }
 

@@ -109,19 +109,15 @@ void sequential::run(const tensor<real>& x, const tensor<real>& y, const kwargs&
             for (size_t j = 0; j < y_size; j++)
                 by[i * y_size + j] = y[indices[idx + i] * y_size + j];
 
-        auto z = bx;
-        for (size_t i = 0; i < layers_m.size(); i++)
-            z = train ? layers_m[i].forward(z) : layers_m[i].predict(z);
-
+        auto z = train ? forward(bx) : backward(bx);
         auto batch_loss = loss_m.f(z, by);
         avg_loss += batch_loss * batch_size;
         avg_acc += get_correct_count(z, by);
         total += batch_size;
 
         if (train) {
-            auto l = loss_m.df(z, by);
-            for (int i = layers_m.size() - 1; i >= 0; i--)
-                l = layers_m[i].backward(l);
+            auto dl = loss_m.df(z, by);
+            backward(dl);
         }
 
         if (verbose == 2) {
@@ -137,6 +133,20 @@ void sequential::run(const tensor<real>& x, const tensor<real>& y, const kwargs&
                   << ", " << TEXT::ACC << ": " << std::setprecision(3) << std::fixed
                   << 100 * avg_acc / total << std::endl;
     }
+}
+
+tensor<real> sequential::forward(tensor<real>& y, const kwargs& args) {
+    std::ignore = args;
+    for (auto& layer : layers_m)
+        y = layer.forward(y);
+    return y;
+}
+
+tensor<real> sequential::backward(tensor<real>& y, const kwargs& args) {
+    std::ignore = args;
+    for (int i = layers_m.size() - 1; i >= 0; i--)
+        y = layers_m[i].backward(y);
+    return y;
 }
 
 tensor<real> sequential::predict(const tensor<real>& x, const kwargs& args) {
