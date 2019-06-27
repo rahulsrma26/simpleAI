@@ -8,7 +8,7 @@ int main(int argc, char* argv[]) {
 
     if (argc < 2) {
         cout << "Usages:" << '\n';
-        cout << argv[0] << " <mnist-dir>" << '\n';
+        cout << argv[0] << " <mnist-dir> [epochs=20] [learning_rate=0.001] [loss=cross_entropy]" << '\n';
         return 0;
     }
 

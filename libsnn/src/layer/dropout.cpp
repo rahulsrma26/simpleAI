@@ -26,7 +26,6 @@ size_t dropout::params() const { return 0; }
 void dropout::set_optimizer(const kwargs& args) { std::ignore = args; }
 
 tensor<real> dropout::forward(tensor<real>& prev_activation) {
-    // NxI x IxO = NxO
     const size_t n = prev_activation.size();
     if (weight_m.size() != n)
         weight_m = tensor<real>(prev_activation.get_shape());

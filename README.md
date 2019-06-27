@@ -4,7 +4,7 @@ Simple Neural Network Library (v2 alpha)
 This project is my attempt to create a simple neural network
 code in C++ (cpp17) that is powerful enough to give decent
 results in [MNIST dataset](http://yann.lecun.com/exdb/mnist/).
-You can download the dataset manually or run [download_mnist.py](download_mnist.py).
+You can download the dataset manually or run [download_mnist.py](scripts/download_mnist.py).
 
 The project is inspired by the simplicity of Keras. Creating a network for MNIST.
 
@@ -18,6 +18,7 @@ Code snippet:
 ```
 
 Console Output:
+
 ![console_run](docs/plots/console_run.gif)
 
 See [demo_mnist.cpp](examples/demo_mnist.cpp) for full code.
@@ -38,6 +39,8 @@ See [demo_mnist.cpp](examples/demo_mnist.cpp) for full code.
 
 ### 2. Layers
 *	Dense Layer
+*   Dropout Layer
+*   Flatten Layer
 
 ### 3. Activators
 *	sigmoid
@@ -56,6 +59,10 @@ See [demo_mnist.cpp](examples/demo_mnist.cpp) for full code.
 
 ### 6. Optimizers
 *	SGD
+*   Momentum
+*   RMSProp
+*   AdaGrad
+*   Adam
 
 ---
 
@@ -110,13 +117,15 @@ cd build
 
 ```sh
 # After build first download MNIST dataset
-python ../download_mnist.py ../data
+python ../scripts/download_mnist.py ../data/mnist
+# or you can download fashion mnist
+# python ../scripts/download_fashion.py ../data/fashion
 # mnist example
-bin/demo_mnist ../data
+bin/demo_mnist ../data/mnist
 # spiral example
 bin/spiral_test
 # mnist model with save/restore
-bin/mnist_model
+bin/mnist_model ../data/mnist
 ```
 For windows users that are using MSVC check '.exe' files in bin\Release folder.
 
