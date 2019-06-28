@@ -1,5 +1,6 @@
 #include "snn/model/sequential.hpp"
 #include "snn/dataset/spiral.hpp"
+#include "snn/util/image.hpp"
 #include <iostream>
 
 int main() {
@@ -12,15 +13,20 @@ int main() {
     m.add("dense(units=8, activation=tanh())");
     m.add("dense(units=5, activation=tanh())");
     m.add("dense(units=1)");
-    m.compile("loss=cross_entropy(), optimizer=sgd(learning_rate=0.03)");
+    m.compile("loss=cross_entropy(), optimizer=adam(learning_rate=0.001)");
     m.summary();
 
     auto [trainX, trainY, testX, testY] = dataset::spiral::generate(8192, false);
 
-    const int epochs = 256;
+    const int epochs = 128;
     for (int epoch = 1; epoch <= epochs; epoch++) {
         cout << "Epoch: " << epoch << '/' << epochs << endl;
-        m.run(trainX, trainY, "batch_size=64");
-        m.run(testX, testY, "batch_size=64, train=false");
+        m.run(trainX, trainY, "batch_size=32");
+        m.run(testX, testY, "batch_size=256, train=false");
     }
+
+    int radius = 256;
+    auto image = m.predict(dataset::spiral::generate_grid(radius));
+    image.reshape({radius * 2 + 1, radius * 2 + 1});
+    save_pgm("spiral.pgm", image);
 }

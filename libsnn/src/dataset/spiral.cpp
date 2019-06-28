@@ -34,6 +34,21 @@ dataset4 generate(shapeType samples, bool sin_cos) {
             tensor<real>({(shapeType)(testY.size()), 1}, testY)};
 }
 
+tensor<real> generate_grid(int n, bool sin_cos) {
+    std::vector<real> inputs;
+    for (int y = -n; y <= n; ++y)
+        for (int x = -n; x <= n; ++x) {
+            real xv = 5.0f * x / n, yv = 5.0f * y / n;
+            if (sin_cos)
+                inputs.insert(inputs.end(), {xv, yv, sin(xv), cos(xv)});
+            else
+                inputs.insert(inputs.end(), {xv, yv});
+        }
+
+    const shapeType dims = sin_cos ? 4 : 2;
+    return tensor<real>({(shapeType)(inputs.size() / dims), dims}, inputs);
+}
+
 } // namespace spiral
 } // namespace dataset
 } // namespace snn

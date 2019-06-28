@@ -12,6 +12,8 @@ namespace spiral {
 
 dataset4 generate(shapeType samples = 1000, bool sin_cos = false);
 
+tensor<real> generate_grid(int radius, bool sin_cos = false);
+
 } // namespace spiral
 } // namespace dataset
 } // namespace snn
