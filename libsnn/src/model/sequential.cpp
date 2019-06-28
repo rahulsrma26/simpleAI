@@ -109,7 +109,8 @@ void sequential::run(const tensor<real>& x, const tensor<real>& y, const kwargs&
             for (size_t j = 0; j < y_size; j++)
                 by[i * y_size + j] = y[indices[idx + i] * y_size + j];
 
-        auto z = train ? forward(bx) : backward(bx);
+        auto z = bx; // copy of batch
+        z = train ? forward(z) : predict(bx);
         auto batch_loss = loss_m.f(z, by);
         avg_loss += batch_loss * batch_size;
         avg_acc += get_correct_count(z, by);
