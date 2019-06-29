@@ -1,4 +1,4 @@
-#include "snn/model/sequential.hpp"
+#include "snn/snn.hpp"
 #include "snn/dataset/mnist.hpp"
 #include <iostream>
 

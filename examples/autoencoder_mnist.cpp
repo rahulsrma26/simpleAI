@@ -1,4 +1,4 @@
-#include "snn/model/autoencoder.hpp"
+#include "snn/snn.hpp"
 #include "snn/dataset/mnist.hpp"
 #include "snn/util/image.hpp"
 #include <iostream>

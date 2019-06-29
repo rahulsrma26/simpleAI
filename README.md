@@ -1,14 +1,12 @@
-Simple Neural Network Library (v2 alpha)
+Simple Neural Network Library (v2 beta)
 ========================================
 
 This project is my attempt to create a simple neural network
-code in C++ (cpp17) that is powerful enough to give decent
-results in [MNIST dataset](http://yann.lecun.com/exdb/mnist/).
-You can download the dataset manually or run [download_mnist.py](scripts/download_mnist.py).
+framework in C++ (cpp17) that is powerful enough to give decent
+results in [MNIST dataset](http://yann.lecun.com/exdb/mnist/) in decent running time.
 
-The project is inspired by the simplicity of Keras. Creating a network for MNIST.
+The project is inspired by the simplicity of Keras. e.g. creating a simple network for MNIST:
 
-Code snippet:
 ```cpp
     models::sequential m;
     m.add("dense(units=300, input=784)");
@@ -24,47 +22,12 @@ Console Output:
 See [demo_mnist.cpp](examples/demo_mnist.cpp) for full code.
 
 ---
+## Index
 
-*	[Features](#features)
 *	[Results](#results)
-*	[Project structure](#project-structure)
 *   [Building Project](#building-project)
-
----
-
-[](#features)
-## Currently Supported Features
-
-### 1. Save/Load Models
-*   Sequential
-*   Autoencoder
-
-### 2. Layers
-*	Dense Layer
-*   Dropout Layer
-*   Flatten Layer
-
-### 3. Activators
-*	Sigmoid
-*	Tanh
-*	Relu
-
-### 4. Loss Functions
-*	Quadratic
-*	Hillinger
-*	Cross-entropy
-
-### 5. Variable Initializers
-*	Zeros
-*	Normal
-*	Xavier
-
-### 6. Optimizers
-*	SGD
-*   Momentum
-*   RMSProp
-*   AdaGrad
-*   Adam
+*	[Documentation](docs/index.md)
+*	[Features](docs/index.md#functions)
 
 ---
 
@@ -92,11 +55,6 @@ See [autoencoder_mnist.cpp](examples/autoencoder_mnist.cpp) for full code.
 
 Here is a reconstruction of some random examples.
 ![alt text](docs/plots/autoencoder.png)
-
----
-
-[](#project-structure)
-add soon...
 
 ---
 

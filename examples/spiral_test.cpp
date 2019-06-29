@@ -1,4 +1,4 @@
-#include "snn/model/sequential.hpp"
+#include "snn/snn.hpp"
 #include "snn/dataset/spiral.hpp"
 #include "snn/util/image.hpp"
 #include <iostream>
