@@ -1,27 +1,31 @@
 #include "snn/snn.hpp"
 #include "snn/dataset/mnist.hpp"
 #include "snn/util/image.hpp"
+#include "snn/util/argparse.hpp"
 #include <iostream>
 
 int main(int argc, char* argv[]) {
     using namespace std;
     using namespace snn;
 
-    if (argc < 3) {
-        cout << "Usages:" << '\n';
-        cout << argv[0] << " <mnist-dir> <output-dir> [epochs=20]" << '\n';
-        return 0;
-    }
+    argparse args("autoencoder_mnist",
+                  "This is an autoencoder model training program for MNIST dataset.");
+    args.add({"mnist_dir"}, "description=directory in which all 4 MNIST files reside");
+    args.add({"output_dir"}, "description=directory for output files");
+    args.add({"-e", "--epochs"}, "type=integer, default=20, description=number of epoches");
+    args.add({"-l", "--learning_rate"},
+             "type=real, default=0.001, description=learning rate of the model");
+    args.add({"-m", "--load_model"},
+             "default='', description=if specified then load the model from the path");
+    args.parse(argc, argv);
 
-    auto data_dir = string(argv[1]);
-    auto [trainX, trainY] = dataset::mnist::load(data_dir + "/train");
-    // auto [testX, testY] = dataset::mnist::load(data_dir + "/t10k");
+    auto [trainX, trainY] = dataset::mnist::load(args["mnist_dir"] + "/train");
     trainX.reshape({0, 784});
     cout << "Dataset loaded." << endl;
 
     models::autoencoder m;
-    ifstream fin("model.bin", ios::binary | ios::in);
-    if (fin.good()) {
+    if (auto model_path = args["load_model"]; model_path != "''") {
+        ifstream fin(model_path, ios::binary | ios::in);
         m.load(fin);
         fin.close();
         cout << "Pre-trained model loaded from disk." << endl;
@@ -31,21 +35,22 @@ int main(int argc, char* argv[]) {
         m.encoder.add("dense(units=32)");
         m.decoder.add("dense(units=256, input=(32))");
         m.decoder.add("dense(units=784)");
-        m.compile("loss=cross_entropy(), optimizer=adam(learning_rate=0.001)");
-        m.summary();
+        m.compile("loss=cross_entropy(), optimizer=adam(learning_rate=" + args["learning_rate"] +
+                  ")");
     }
+    m.summary();
 
-    const int epochs = argc >= 4 ? stoi(argv[3]) : 20;
+    const int epochs = stoi(args["epochs"]);
     for (int epoch = 1; epoch <= epochs; epoch++) {
         cout << "Epoch: " << epoch << '/' << epochs << endl;
         m.run(trainX, trainX, "batch_size=32");
     }
 
-    ofstream fout("model.bin", ios::binary | ios::out);
+    auto out_dir = args["output_dir"] + "/";
+    ofstream fout(out_dir + "model.bin", ios::binary | ios::out);
     m.save(fout);
     fout.close();
 
-    auto out_dir = string(argv[2]);
     const auto examples = trainX.get_shape()[0];
     for (int i = 0; i < 10; i++) {
         auto rand_idx = rand() % examples;

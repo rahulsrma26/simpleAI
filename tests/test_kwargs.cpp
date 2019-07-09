@@ -22,12 +22,15 @@ int main() {
 
 	k = kwargs("init=xavier(a=500, abc_def='err', k099=-2.1143), layer=dense()");
     cout << k << '\n';
-    
+
 	auto [f0, p0] = k.get_function("init");
     cout << '"' << f0 << '"' << '=' << '"' << p0 << '"' << '\n';
     auto [f1, p1] = k.get_function("layer");
     cout << '"' << f1 << '"' << '=' << '"' << p1 << '"' << '\n';
 
     k = kwargs("units=500, use_bias=true, kernel_initializer=xavier(), bias_initializer=zeros(), input=784");
+    cout << k << '\n';
+
+    k = kwargs("default=\"\"");
     cout << k << '\n';
 }

@@ -43,6 +43,8 @@ public:
 
     double get_double(const std::string& key) const;
 
+    std::vector<std::string> get_vector(const std::string& key) const;
+
     std::vector<int> get_int_vector(const std::string& key) const;
 
     std::vector<double> get_double_vector(const std::string& key) const;
@@ -58,6 +60,8 @@ public:
     size_t size() const;
 
     void set(const std::string& key, const std::string& value);
+
+    void set_vector(const std::string& key, const std::vector<std::string>& list);
 
     void set_int_vector(const std::string& key, const std::vector<int>& list);
 

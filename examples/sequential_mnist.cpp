@@ -1,50 +1,54 @@
 #include "snn/snn.hpp"
 #include "snn/dataset/mnist.hpp"
+#include "snn/util/argparse.hpp"
 #include <iostream>
 
 int main(int argc, char* argv[]) {
     using namespace std;
     using namespace snn;
 
-    if (argc < 2) {
-        cout << "Usages:" << '\n';
-        cout << argv[0] << " <mnist-dir> [epochs=20] [learning_rate=0.001] [loss=cross_entropy]" << '\n';
-        return 0;
-    }
+    argparse args("sequential_mnist",
+                  "This is a sequential model training program for MNIST dataset.");
+    args.add({"mnist_dir"}, "description=directory in which all 4 MNIST files reside");
+    args.add({"-e", "--epochs"}, "type=integer, default=20, description=number of epoches");
+    args.add({"-l", "--learning_rate"},
+             "type=real, default=0.001, description=learning rate of the model");
+    args.add({"-m", "--load_model"},
+             "default='', description=if specified then load the model from the path");
+    args.add({"-o", "--output_model"}, "default=model.bin, description=export model path");
+    args.parse(argc, argv);
 
-    auto data_dir = string(argv[1]);
-    auto [trainX, trainY] = dataset::mnist::load(data_dir + "/train");
-    auto [testX, testY] = dataset::mnist::load(data_dir + "/t10k");
+    auto [trainX, trainY] = dataset::mnist::load(args["mnist_dir"] + "/train");
+    auto [testX, testY] = dataset::mnist::load(args["mnist_dir"] + "/t10k");
     cout << "Dataset loaded." << endl;
 
     models::sequential m;
-    ifstream fin("model.bin", ios::binary | ios::in);
-    if (fin.good()) {
+    if (auto model_path = args["load_model"]; model_path != "''") {
+        ifstream fin(model_path, ios::binary | ios::in);
         m.load(fin);
         fin.close();
         cout << "Pre-trained model loaded from disk." << endl;
     } else {
         seed(12345);
-        string learning_rate = argc >= 4 ? argv[3] : "0.001";
-        string loss = argc >= 5 ? argv[4] : "cross_entropy";
         m.add("flatten(input=(28,28))");
         m.add("dense(units=400, activation=relu())");
         m.add("dropout(rate=0.3)");
         m.add("dense(units=50, activation=relu())");
         m.add("dropout(rate=0.5)");
         m.add("dense(units=10)");
-        m.compile("loss=" + loss + "(), optimizer=adam(learning_rate=" + learning_rate + ")");
-        m.summary();
+        m.compile("loss=cross_entropy(), optimizer=adam(learning_rate=" + args["learning_rate"] +
+                  ")");
     }
+    m.summary();
 
-    const int epochs = argc >= 3 ? stoi(argv[2]) : 20;
+    const int epochs = stoi(args["epochs"]);
     for (int epoch = 1; epoch <= epochs; epoch++) {
         cout << "Epoch: " << epoch << '/' << epochs << endl;
         m.run(trainX, trainY, "batch_size=32");
         m.run(testX, testY, "batch_size=128, train=false");
     }
 
-    ofstream fout("model.bin", ios::binary | ios::out);
+    ofstream fout(args["output_model"], ios::binary | ios::out);
     m.save(fout);
     fout.close();
 }

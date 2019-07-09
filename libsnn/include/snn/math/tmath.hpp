@@ -36,6 +36,14 @@ tensor<T> log(const tensor<T>& t, T epsilon = T(0)) {
 }
 
 template <class T>
+tensor<T> softplus(const tensor<T>& t) {
+    tensor<T> r(t.get_shape());
+    for (size_t i = 0; i < t.size(); i++)
+        r[i] = std::log(std::exp(t[i]) + 1);
+    return r;
+}
+
+template <class T>
 tensor<T> matmul(const tensor<T>& a, const tensor<T>& b, const T bias = T(0)) {
     const auto a_dim = a.get_shape();
     if (a_dim.size() != 2)

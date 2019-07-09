@@ -2,15 +2,17 @@
 
 namespace snn {
 
-std::regex kwargs_pattern("('[^']*'|\"[^\"]*\"|\\([^\\)]*\\)|[^,])+");
-std::regex named_args_pattern("^\\s*([A-Za-z0-9_]*)\\s*\\=\\s*([^\\s]|[^\\s].*[^\\s])\\s*$");
-std::regex function_args_pattern("^\\s*([A-Za-z0-9_]+)\\s*\\((.*)\\)\\s*$");
-std::regex int_pattern("[-]{0,1}[\\d]*[\\.]{0,1}[\\d]+");
-std::regex double_pattern("[-]{0,1}[\\d]*[\\.]{0,1}[\\d]+([e]{0,1}[-]{0,1}[\\d]+){0,1}");
+namespace kwargs_pattern {
+std::regex kwargs("('[^']*'|\"[^\"]*\"|\\([^\\)]*\\)|[^,])+");
+std::regex named_args("^\\s*([A-Za-z0-9_]*)\\s*\\=\\s*([^\\s]|[^\\s].*[^\\s])\\s*$");
+std::regex function_args("^\\s*([A-Za-z0-9_]+)\\s*\\((.*)\\)\\s*$");
+std::regex int_value("[-]{0,1}[\\d]*[\\.]{0,1}[\\d]+");
+std::regex double_value("[-]{0,1}[\\d]*[\\.]{0,1}[\\d]+([e]{0,1}[-]{0,1}[\\d]+){0,1}");
+} // namespace kwargs_pattern
 
 std::pair<std::string, std::string> split_named_args(const std::string& args) {
     std::smatch match;
-    if (!std::regex_search(args, match, named_args_pattern))
+    if (!std::regex_search(args, match, kwargs_pattern::named_args))
         throw std::runtime_error("Invalid named_args: " + args);
     return {match[1].str(), match[2].str()};
 }
@@ -18,10 +20,10 @@ std::pair<std::string, std::string> split_named_args(const std::string& args) {
 kwargs::kwargs(const char* args) {
     std::string str(args);
     std::smatch match;
-    if (std::regex_search(str, match, function_args_pattern)) {
+    if (std::regex_search(str, match, kwargs_pattern::function_args)) {
         args_m.insert({"", str});
     } else {
-        for (std::smatch match; std::regex_search(str, match, kwargs_pattern);
+        for (std::smatch match; std::regex_search(str, match, kwargs_pattern::kwargs);
              str = match.suffix().str()) {
             if (str.find('=') == std::string::npos)
                 args_m.insert({"", str});
@@ -56,7 +58,7 @@ std::pair<std::string, kwargs> kwargs::get_function(const std::string& key) cons
     if (r == args_m.end())
         throw std::runtime_error("Key not found: " + key);
     std::smatch match;
-    if (!std::regex_search(r->second, match, function_args_pattern))
+    if (!std::regex_search(r->second, match, kwargs_pattern::function_args))
         throw std::runtime_error("Invalid function_args: " + r->second);
     return {match[1].str(), kwargs(match[2].str().c_str())};
 }
@@ -69,10 +71,20 @@ int kwargs::get_int(const std::string& key) const { return std::stoi(args_m.at(k
 
 double kwargs::get_double(const std::string& key) const { return std::stod(args_m.at(key)); }
 
+std::vector<std::string> kwargs::get_vector(const std::string& key) const {
+    std::vector<std::string> values;
+    std::string str = args_m.at(key);
+    for (std::smatch match; std::regex_search(str, match, kwargs_pattern::kwargs);
+         str = match.suffix().str())
+        values.push_back(match.str());
+    return values;
+}
+
 std::vector<int> kwargs::get_int_vector(const std::string& key) const {
     std::vector<int> numbers;
     std::string str = args_m.at(key);
-    for (std::smatch match; std::regex_search(str, match, int_pattern); str = match.suffix().str())
+    for (std::smatch match; std::regex_search(str, match, kwargs_pattern::int_value);
+         str = match.suffix().str())
         numbers.push_back(std::stoi(match.str()));
     return numbers;
 }
@@ -80,7 +92,7 @@ std::vector<int> kwargs::get_int_vector(const std::string& key) const {
 std::vector<double> kwargs::get_double_vector(const std::string& key) const {
     std::vector<double> numbers;
     std::string str = args_m.at(key);
-    for (std::smatch match; std::regex_search(str, match, double_pattern);
+    for (std::smatch match; std::regex_search(str, match, kwargs_pattern::double_value);
          str = match.suffix().str())
         numbers.push_back(std::stod(match.str()));
     return numbers;
@@ -118,22 +130,26 @@ size_t kwargs::size() const { return args_m.size(); }
 
 void kwargs::set(const std::string& key, const std::string& value) { args_m[key] = value; }
 
-void kwargs::set_int_vector(const std::string& key, const std::vector<int>& list) {
+template<class T>
+std::string vector_to_string(const std::vector<T>& list) {
     std::stringstream ss;
     ss << "(" << list[0];
     for (size_t i = 1; i < list.size(); i++)
         ss << ", " << list[i];
     ss << ")";
-    args_m[key] = ss.str();
+    return ss.str();
+}
+
+void kwargs::set_vector(const std::string& key, const std::vector<std::string>& list) {
+    args_m[key] = vector_to_string<std::string>(list);
+}
+
+void kwargs::set_int_vector(const std::string& key, const std::vector<int>& list) {
+    args_m[key] = vector_to_string<int>(list);
 }
 
 void kwargs::set_double_vector(const std::string& key, const std::vector<double>& list) {
-    std::stringstream ss;
-    ss << "(" << list[0];
-    for (size_t i = 1; i < list.size(); i++)
-        ss << ", " << list[i];
-    ss << ")";
-    args_m[key] = ss.str();
+    args_m[key] = vector_to_string<double>(list);
 }
 
 std::string kwargs::to_string() const {

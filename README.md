@@ -53,7 +53,7 @@ Autoencoder Experiment:
 
 See [autoencoder_mnist.cpp](examples/autoencoder_mnist.cpp) for full code.
 
-Here is a reconstruction of some random examples.
+Here is the reconstruction of some random examples.
 ![alt text](docs/plots/autoencoder.png)
 
 ---
@@ -96,9 +96,9 @@ bin/demo_mnist ../data/mnist
 # spiral example
 bin/spiral_test
 # mnist model with save/restore
-bin/mnist_model ../data/mnist
+bin/mnist_model -h
 ```
-For windows users that are using MSVC check '.exe' files in bin\Release folder.
+For windows users who are using MSVC check '.exe' files in bin\Release folder.
 
 ### Even More ways to build
 
