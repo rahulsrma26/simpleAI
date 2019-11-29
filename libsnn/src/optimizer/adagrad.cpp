@@ -14,10 +14,10 @@ std::string adagrad::type() { return TEXT::ADAGRAD; }
 std::string adagrad::name() const { return this->type(); }
 
 void adagrad::update(tensor<real>& t, const tensor<real>& g) {
-    const size_t n = t.size();
+    const ompint n = t.size();
 
 #pragma omp parallel for if (n >= OPENMP_SMALL_THRESHOLD)
-    for (size_t i = 0; i < n; i++) {
+    for (ompint i = 0; i < n; i++) {
         cache_m[i] += g[i] * g[i];
         t[i] -= learning_rate_m * g[i] / (std::sqrt(cache_m[i]) + eps_m);
     }

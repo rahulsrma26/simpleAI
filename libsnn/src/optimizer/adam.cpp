@@ -17,9 +17,9 @@ std::string adam::type() { return TEXT::ADAM; }
 std::string adam::name() const { return this->type(); }
 
 void adam::update(tensor<real>& t, const tensor<real>& g) {
-    const size_t n = t.size();
+    const ompint n = t.size();
 #pragma omp parallel for if (n >= OPENMP_SMALL_THRESHOLD)
-    for (size_t i = 0; i < n; i++) {
+    for (ompint i = 0; i < n; i++) {
         momentum_m[i] = beta1_m * momentum_m[i] + (1 - beta1_m) * g[i];
         velocity_m[i] = beta2_m * velocity_m[i] + (1 - beta2_m) * g[i] * g[i];
         t[i] -= learning_rate_m * momentum_m[i] / (std::sqrt(velocity_m[i]) + eps_m);

@@ -44,11 +44,11 @@ void dense::set_optimizer(const kwargs& args) {
 tensor<real> dense::forward(tensor<real>& prev_activation) {
     // NxI x IxO = NxO
     input_m = std::move(prev_activation);
-    const size_t batch_size = input_m.get_shape().front();
+    const ompint batch_size = input_m.get_shape().front();
     weighted_input_m = tensor<real>({(shapeType)batch_size, (shapeType)outputs_m});
 
 #pragma omp parallel for
-    for (size_t i = 0; i < batch_size; i++) {
+    for (ompint i = 0; i < batch_size; i++) {
         for (size_t j = 0; j < outputs_m; j++) {
             real sum = use_bias_m ? bias_m.var[j] : 0.0;
             for (size_t k = 0; k < inputs_m; k++)
@@ -60,11 +60,11 @@ tensor<real> dense::forward(tensor<real>& prev_activation) {
 }
 
 tensor<real> dense::predict(tensor<real>& input) {
-    const size_t batch_size = input.get_shape().front();
+    const ompint batch_size = input.get_shape().front();
     tensor<real> output({(shapeType)batch_size, (shapeType)outputs_m});
 
 #pragma omp parallel for
-    for (size_t i = 0; i < batch_size; i++) {
+    for (ompint i = 0; i < batch_size; i++) {
         for (size_t j = 0; j < outputs_m; j++) {
             real sum = use_bias_m ? bias_m.var[j] : 0.0;
             for (size_t k = 0; k < inputs_m; k++)
@@ -78,7 +78,7 @@ tensor<real> dense::predict(tensor<real>& input) {
 tensor<real> dense::backward(tensor<real>& pre_gradients) {
     auto delta = activator_m.df(weighted_input_m);
     delta *= pre_gradients;
-    const size_t batch_size = input_m.get_shape().front();
+    const ompint batch_size = input_m.get_shape().front();
 
     if (use_bias_m) {
         tensor<real> bias_grad({(shapeType)outputs_m});
@@ -91,9 +91,9 @@ tensor<real> dense::backward(tensor<real>& pre_gradients) {
     tensor<real> next_grad({(shapeType)batch_size, (shapeType)inputs_m});
 #pragma omp parallel if (batch_size >= OPENMP_LARGE_THRESHOLD)
     {
-        for (size_t i = 0; i < batch_size; i++)
+        for (ompint i = 0; i < batch_size; i++)
 #pragma omp for
-            for (size_t j = 0; j < inputs_m; j++) {
+            for (ompint j = 0; j < inputs_m; j++) {
                 real sum = 0.0;
                 for (size_t k = 0; k < outputs_m; k++)
                     sum += weight_m.var[k * inputs_m + j] * delta[i * outputs_m + k];
@@ -103,7 +103,7 @@ tensor<real> dense::backward(tensor<real>& pre_gradients) {
 
     tensor<real> weight_grad({(shapeType)outputs_m, (shapeType)inputs_m});
 #pragma omp parallel for if (outputs_m >= OPENMP_LARGE_THRESHOLD)
-    for (size_t j = 0; j < outputs_m; j++)
+    for (ompint j = 0; j < outputs_m; j++)
         for (size_t k = 0; k < inputs_m; k++) {
             real sum = 0;
             for (size_t i = 0; i < batch_size; i++)

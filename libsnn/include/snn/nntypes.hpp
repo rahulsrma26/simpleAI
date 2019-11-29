@@ -11,9 +11,15 @@ namespace snn {
 typedef uint32_t uint;
 typedef float real;
 
-constexpr size_t OPENMP_MINI_THRESHOLD = 256;
-constexpr size_t OPENMP_SMALL_THRESHOLD = 64;
-constexpr size_t OPENMP_MEDIUM_THRESHOLD = 16;
-constexpr size_t OPENMP_LARGE_THRESHOLD = 4;
+#ifdef _MSC_VER
+typedef int ompint;
+#else
+typedef int ompint;
+#endif
+
+constexpr ompint OPENMP_MINI_THRESHOLD = 256;
+constexpr ompint OPENMP_SMALL_THRESHOLD = 64;
+constexpr ompint OPENMP_MEDIUM_THRESHOLD = 16;
+constexpr ompint OPENMP_LARGE_THRESHOLD = 4;
 
 } // namespace snn

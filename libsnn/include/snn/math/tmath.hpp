@@ -56,13 +56,13 @@ tensor<T> matmul(const tensor<T>& a, const tensor<T>& b, const T bias = T(0)) {
     if (a_dim[1] != b_dim[0])
         throw std::runtime_error("Invalid shape for matrix multiplication.");
 
-    const size_t n = a_dim[0];
+    const ompint n = a_dim[0];
     const size_t p = b_dim[0];
     const size_t m = b_dim[1];
 
     tensor<T> c({(shapeType)(n), (shapeType)(m)});
 #pragma omp parallel for
-    for (size_t i = 0; i < n; i++)
+    for (ompint i = 0; i < n; i++)
         for (size_t j = 0; j < m; j++) {
             T sum{bias};
             for (size_t k = 0; k < p; k++)
@@ -92,13 +92,13 @@ tensor<T> matmulT_b(const tensor<T>& a, const tensor<T>& bt, const tensor<T>& bi
     if (bias_dim[0] != bt_dim[0])
         throw std::runtime_error("Invalid shape for bias addition.");
 
-    const size_t n = a_dim[0];
+    const ompint n = a_dim[0];
     const size_t p = a_dim[1];
     const size_t m = bt_dim[0];
 
     tensor<T> c({(shapeType)(n), (shapeType)(m)});
 #pragma omp parallel for if (n >= OPENMP_LARGE_THRESHOLD)
-    for (size_t i = 0; i < n; i++)
+    for (ompint i = 0; i < n; i++)
         for (size_t j = 0; j < m; j++) {
             T sum{bias[j]};
             for (size_t k = 0; k < p; k++)
@@ -121,9 +121,10 @@ tensor<T> pad(const tensor<T>& t, const shapeBounds& padding) {
     for (int i = 0; i < n; i++)
         newShape[i] += padding[i].first + padding[i].second;
 
+    const ompint ts = t.size();
     tensor<T> padded(newShape);
 #pragma omp parallel for if (n >= OPENMP_MINI_THRESHOLD)
-    for (size_t i = 0; i < t.size(); i++) {
+    for (ompint i = 0; i < ts; i++) {
         int k1 = 0;
         for (int j = n - 1, k = i, s = 1; j >= 0; j--) {
             k1 += s * ((k % dim[j]) + padding[j].first);
