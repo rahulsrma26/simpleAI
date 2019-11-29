@@ -1,3 +1,10 @@
+/*
+This is an implementation of spiral dataset example. You can check tensorflow implementation running live from tensorflow playground site.
+https://playground.tensorflow.org/#activation=tanh&batchSize=30&dataset=spiral&regDataset=reg-plane&learningRate=0.01&regularizationRate=0&noise=0&networkShape=8,8,5,2&seed=0.48787&showTestData=false&discretize=false&percTrainData=50&x=true&y=true&xTimesY=false&xSquared=false&ySquared=false&cosX=false&sinX=false&cosY=false&sinY=false&collectStats=false&problem=classification&initZero=false&hideText=false
+
+After ruuning the binary see spiral.pgm for results.
+*/
+
 #include "snn/snn.hpp"
 #include "snn/dataset/spiral.hpp"
 #include "snn/util/image.hpp"
