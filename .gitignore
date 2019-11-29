@@ -3,7 +3,5 @@
 .vscode
 **/*.pyc
 tmp/
-build/
-lbuild/
-wbuild/
+*build/
 data/
