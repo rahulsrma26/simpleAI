@@ -34,6 +34,8 @@ const std::string FLATTEN("flatten");
 const std::string HILLINGER("hillinger");
 const std::string KEEP_PROBABILITY("keep_probability");
 const std::string KERNEL_INITIALIZER("kernel_initializer");
+const std::string LEAK("leak");
+const std::string LEAKY_RELU("leaky_relu");
 const std::string LEARNING_RATE("learning_rate");
 const std::string LOSS("loss");
 const std::string INITIALIZER("initializer");
