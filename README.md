@@ -1,7 +1,11 @@
 Simple Neural Network Library (v2 beta)
 ========================================
 
-[![Build Status](https://travis-ci.org/rahulsrma26/simpleAI.svg?branch=master)](https://travis-ci.org/rahulsrma26/simpleAI)
+| Platform             | Build Status  |
+| ---------------------| ------------- |
+| Linux + GCC          |[![Build Status](https://travis-ci.org/rahulsrma26/simpleAI.svg?branch=master&label=Travis)](https://travis-ci.org/rahulsrma26/simpleAI)|
+| Linux + Clang        |[![Build Status](https://travis-ci.org/rahulsrma26/simpleAI.svg?branch=master&label=Travis)](https://travis-ci.org/rahulsrma26/simpleAI)|
+| MacOs                |[![Build Status](https://travis-ci.org/rahulsrma26/simpleAI.svg?branch=master&label=Travis)](https://travis-ci.org/rahulsrma26/simpleAI)|
 
 
 This project is my attempt to create a simple neural network

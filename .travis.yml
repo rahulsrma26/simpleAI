@@ -1,21 +1,29 @@
-dist: bionic
-sudo: false
 language: cpp
+sudo: true
 
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - gcc-9
-      - g++-9
-      - cmake
+matrix:
+  include:
+    - os: linux
+      dist: bionic
+      compiler: gcc
+      addons:
+        apt:
+          packages:
+            - build-essential
+            - cmake
+
+    - os: linux
+      dist: bionic
+      compiler: clang
+
+    - os: osx
+      osx_image: xcode11.3
+
+# - os: windows
 
 # install:
 #   - pip install --user conan cmake
 
 script:
-  - export CC=/usr/bin/gcc-9
-  - export CXX=/usr/bin/g++9
   - cmake .
   - cmake --build . -- -j2
