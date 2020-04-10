@@ -1,6 +1,9 @@
 Simple Neural Network Library (v2 beta)
 ========================================
 
+[![Build Status](https://travis-ci.org/rahulsrma26/simpleAI.svg?branch=master)](https://travis-ci.org/rahulsrma26/simpleAI)
+
+
 This project is my attempt to create a simple neural network
 framework in C++ (cpp17) that is powerful enough to give decent
 results in [MNIST dataset](http://yann.lecun.com/exdb/mnist/) in decent running time.
