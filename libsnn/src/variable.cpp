@@ -21,11 +21,11 @@ void variable::optimize(const tensor<real>& g) { opt_m.update(var, g); }
 void variable::save(std::ostream& os, bool save_gradient) const {
     var.to_stream(os);
     opt_m.save(os, save_gradient);
-};
+}
 
 void variable::load(std::istream& is) {
     var = tensor<real>::from_stream(is);
     opt_m.load(is);
-};
+}
 
 } // namespace snn

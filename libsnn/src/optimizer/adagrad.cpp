@@ -30,14 +30,14 @@ void adagrad::save(std::ostream& os, bool save_gradient) const {
     os.write(reinterpret_cast<const char*>(&decay_m), sizeof(decay_m));
     os.write(reinterpret_cast<const char*>(&eps_m), sizeof(eps_m));
     cache_m.to_stream(os);
-};
+}
 
 adagrad::adagrad(std::istream& is) : cache_m({1}) {
     is.read(reinterpret_cast<char*>(&learning_rate_m), sizeof(learning_rate_m));
     is.read(reinterpret_cast<char*>(&decay_m), sizeof(decay_m));
     is.read(reinterpret_cast<char*>(&eps_m), sizeof(eps_m));
     cache_m = tensor<real>::from_stream(is);
-};
+}
 
 } // namespace optimizers
 } // namespace snn

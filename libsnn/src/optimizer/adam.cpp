@@ -36,7 +36,7 @@ void adam::save(std::ostream& os, bool save_gradient) const {
     os.write(reinterpret_cast<const char*>(&eps_m), sizeof(eps_m));
     momentum_m.to_stream(os);
     velocity_m.to_stream(os);
-};
+}
 
 adam::adam(std::istream& is) : momentum_m({1}), velocity_m({1}) {
     is.read(reinterpret_cast<char*>(&learning_rate_m), sizeof(learning_rate_m));
@@ -46,7 +46,7 @@ adam::adam(std::istream& is) : momentum_m({1}), velocity_m({1}) {
     is.read(reinterpret_cast<char*>(&eps_m), sizeof(eps_m));
     momentum_m = tensor<real>::from_stream(is);
     velocity_m = tensor<real>::from_stream(is);
-};
+}
 
 } // namespace optimizers
 } // namespace snn

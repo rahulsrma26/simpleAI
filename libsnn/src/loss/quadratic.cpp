@@ -24,9 +24,9 @@ tensor<real> quadratic::df(const tensor<real>& o, const tensor<real>& l) const {
     return r;
 }
 
-void quadratic::save(std::ostream& os) const { std::ignore = os; };
+void quadratic::save(std::ostream& os) const { std::ignore = os; }
 
-quadratic::quadratic(std::istream& is) { std::ignore = is; };
+quadratic::quadratic(std::istream& is) { std::ignore = is; }
 
 } // namespace losses
 } // namespace snn

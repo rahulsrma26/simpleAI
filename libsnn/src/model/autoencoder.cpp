@@ -96,14 +96,14 @@ void autoencoder::save(std::ostream& os, bool save_gradient) const {
     loss_m.save(os);
     encoder.save(os, save_gradient);
     decoder.save(os, save_gradient);
-};
+}
 
 void autoencoder::load(std::istream& is) {
     is >> variable_random_engine;
     loss_m.load(is);
     encoder.load(is);
     decoder.load(is);
-};
+}
 
 } // namespace models
 } // namespace snn

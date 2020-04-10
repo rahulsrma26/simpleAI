@@ -27,7 +27,7 @@ void dropout::set_optimizer(const kwargs& args) { std::ignore = args; }
 
 tensor<real> dropout::forward(tensor<real>& prev_activation) {
     const ompint n = prev_activation.size();
-    if (weight_m.size() != n)
+    if ((int)weight_m.size() != n)
         weight_m = tensor<real>(prev_activation.get_shape());
 
 #pragma omp parallel for if (n >= OPENMP_MEDIUM_THRESHOLD)
@@ -61,13 +61,13 @@ void dropout::save(std::ostream& os, bool save_gradient) const {
     std::ignore = save_gradient;
     vector_to_stream(os, inputs_m);
     os.write(reinterpret_cast<const char*>(&rate_m), sizeof(rate_m));
-};
+}
 
 dropout::dropout(std::istream& is) : weight_m({1}) {
     inputs_m = vector_from_stream<shapeType>(is);
     is.read(reinterpret_cast<char*>(&rate_m), sizeof(rate_m));
     generator_m = std::bernoulli_distribution(1 - rate_m);
-};
+}
 
 } // namespace layers
 } // namespace snn

@@ -165,7 +165,7 @@ void sequential::save(std::ostream& os, bool save_gradient) const {
     for (auto& layer : layers_m)
         layer.save(os, save_gradient);
     loss_m.save(os);
-};
+}
 
 void sequential::load(std::istream& is) {
     is >> variable_random_engine;
@@ -176,7 +176,7 @@ void sequential::load(std::istream& is) {
         layers_m.back().load(is);
     }
     loss_m.load(is);
-};
+}
 
 } // namespace models
 } // namespace snn

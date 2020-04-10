@@ -25,7 +25,7 @@ void activator::load(std::istream& is) {
     std::string type(type_length, ' ');
     is.read(reinterpret_cast<char*>(&type[0]), type_length);
     activator_m = get_activator_from_type<std::istream&>(type, is);
-};
+}
 
 void activator::save(std::ostream& os) const {
     std::string type = activator_m->name();
@@ -33,7 +33,7 @@ void activator::save(std::ostream& os) const {
     os.write(reinterpret_cast<const char*>(&type_length), sizeof(uint32_t));
     os.write(reinterpret_cast<const char*>(&type[0]), type_length);
     activator_m->save(os);
-};
+}
 
 std::string activator::name() const { return activator_m->name(); }
 

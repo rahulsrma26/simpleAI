@@ -30,9 +30,9 @@ tensor<real> hillinger::df(const tensor<real>& o, const tensor<real>& l) const {
     return r;
 }
 
-void hillinger::save(std::ostream& os) const { std::ignore = os; };
+void hillinger::save(std::ostream& os) const { std::ignore = os; }
 
-hillinger::hillinger(std::istream& is) { std::ignore = is; };
+hillinger::hillinger(std::istream& is) { std::ignore = is; }
 
 } // namespace losses
 } // namespace snn

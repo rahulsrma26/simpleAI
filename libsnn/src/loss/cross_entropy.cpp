@@ -28,9 +28,9 @@ tensor<real> cross_entropy::df(const tensor<real>& o, const tensor<real>& l) con
     return r;
 }
 
-void cross_entropy::save(std::ostream& os) const { std::ignore = os; };
+void cross_entropy::save(std::ostream& os) const { std::ignore = os; }
 
-cross_entropy::cross_entropy(std::istream& is) { std::ignore = is; };
+cross_entropy::cross_entropy(std::istream& is) { std::ignore = is; }
 
 } // namespace losses
 } // namespace snn

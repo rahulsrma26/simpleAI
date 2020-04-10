@@ -26,12 +26,12 @@ void sgd::save(std::ostream& os, bool save_gradient) const {
     std::ignore = save_gradient;
     os.write(reinterpret_cast<const char*>(&learning_rate_m), sizeof(learning_rate_m));
     os.write(reinterpret_cast<const char*>(&decay_m), sizeof(decay_m));
-};
+}
 
 sgd::sgd(std::istream& is) {
     is.read(reinterpret_cast<char*>(&learning_rate_m), sizeof(learning_rate_m));
     is.read(reinterpret_cast<char*>(&decay_m), sizeof(decay_m));
-};
+}
 
 } // namespace optimizers
 } // namespace snn

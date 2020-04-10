@@ -24,7 +24,7 @@ void loss::load(std::istream& is) {
     std::string type(type_length, ' ');
     is.read(reinterpret_cast<char*>(&type[0]), type_length);
     loss_m = get_loss_from_type<std::istream&>(type, is);
-};
+}
 
 void loss::save(std::ostream& os) const {
     std::string type = loss_m->name();
@@ -32,7 +32,7 @@ void loss::save(std::ostream& os) const {
     os.write(reinterpret_cast<const char*>(&type_length), sizeof(uint32_t));
     os.write(reinterpret_cast<const char*>(&type[0]), type_length);
     loss_m->save(os);
-};
+}
 
 std::string loss::name() const { return loss_m->name(); }
 

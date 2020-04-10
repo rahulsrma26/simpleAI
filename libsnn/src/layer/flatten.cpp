@@ -38,11 +38,11 @@ tensor<real> flatten::backward(tensor<real>& pre_gradients) {
 void flatten::save(std::ostream& os, bool save_gradient) const {
     std::ignore = save_gradient;
     os.write(reinterpret_cast<const char*>(&input_shape_m), sizeof(input_shape_m));
-};
+}
 
 flatten::flatten(std::istream& is) {
     is.read(reinterpret_cast<char*>(&input_shape_m), sizeof(input_shape_m));
-};
+}
 
 } // namespace layers
 } // namespace snn

@@ -28,7 +28,7 @@ void optimizer::load(std::istream& is) {
     std::string type(type_length, ' ');
     is.read(reinterpret_cast<char*>(&type[0]), type_length);
     optimizer_m = get_optimizer_from_type<std::istream&>(type, is);
-};
+}
 
 void optimizer::save(std::ostream& os, bool save_gradient) const {
     std::string type = optimizer_m->name();
@@ -36,7 +36,7 @@ void optimizer::save(std::ostream& os, bool save_gradient) const {
     os.write(reinterpret_cast<const char*>(&type_length), sizeof(uint32_t));
     os.write(reinterpret_cast<const char*>(&type[0]), type_length);
     optimizer_m->save(os, save_gradient);
-};
+}
 
 std::string optimizer::name() const { return optimizer_m->name(); }
 

@@ -40,7 +40,7 @@ tensor<real> generate_grid(int n, bool sin_cos) {
         for (int x = -n; x <= n; ++x) {
             real xv = 5.0f * x / n, yv = 5.0f * y / n;
             if (sin_cos)
-                inputs.insert(inputs.end(), {xv, yv, sin(xv), cos(xv)});
+                inputs.insert(inputs.end(), {xv, yv, (float)sin(xv), (float)cos(xv)});
             else
                 inputs.insert(inputs.end(), {xv, yv});
         }

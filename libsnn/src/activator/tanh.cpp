@@ -18,9 +18,9 @@ tensor<real> tanh::df(const tensor<real>& t) const {
     return r;
 }
 
-void tanh::save(std::ostream& os) const { std::ignore = os; };
+void tanh::save(std::ostream& os) const { std::ignore = os; }
 
-tanh::tanh(std::istream& is) { std::ignore = is; };
+tanh::tanh(std::istream& is) { std::ignore = is; }
 
 } // namespace activators
 } // namespace snn

@@ -29,9 +29,9 @@ tensor<real> sigmoid::df(const tensor<real>& t) const {
     return r;
 }
 
-void sigmoid::save(std::ostream& os) const { std::ignore = os; };
+void sigmoid::save(std::ostream& os) const { std::ignore = os; }
 
-sigmoid::sigmoid(std::istream& is) { std::ignore = is; };
+sigmoid::sigmoid(std::istream& is) { std::ignore = is; }
 
 } // namespace activators
 } // namespace snn
