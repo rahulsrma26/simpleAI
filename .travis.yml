@@ -1,6 +1,17 @@
-dist: trusty
+dist: bionic
 sudo: false
 language: cpp
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-snapshot
+      - doxygen
+
+install:
+  - pip install --user conan cmake
 
 script:
   - cmake .
