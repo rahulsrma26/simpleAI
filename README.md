@@ -1,11 +1,10 @@
 Simple Neural Network Library (v2 beta)
 ========================================
 
-| Platform             | Build Status  |
-| ---------------------| ------------- |
-| Linux + GCC          |[![Build Status](https://travis-ci.org/rahulsrma26/simpleAI.svg?branch=master&label=Travis)](https://travis-ci.org/rahulsrma26/simpleAI)|
-| Linux + Clang        |[![Build Status](https://travis-ci.org/rahulsrma26/simpleAI.svg?branch=master&label=Travis)](https://travis-ci.org/rahulsrma26/simpleAI)|
-| MacOs                |[![Build Status](https://travis-ci.org/rahulsrma26/simpleAI.svg?branch=master&label=Travis)](https://travis-ci.org/rahulsrma26/simpleAI)|
+[![Build Status](https://img.shields.io/travis/rahulsrma26/simpleAI.svg?branch=master&style=plastic&label=linux+gcc)](https://travis-ci.org/rahulsrma26/simpleAI)
+[![Build Status](https://img.shields.io/travis/rahulsrma26/simpleAI.svg?branch=master&style=plastic&label=linux+clang)](https://travis-ci.org/rahulsrma26/simpleAI)
+[![Build Status](https://img.shields.io/travis/rahulsrma26/simpleAI.svg?branch=master&style=plastic&label=osx)](https://travis-ci.org/rahulsrma26/simpleAI)
+[![Build status](https://img.shields.io/appveyor/build/rahulsrma26/simpleAI?branch=master&style=plastic&label=windows)](https://ci.appveyor.com/project/rahulsrma26/simpleai)
 
 
 This project is my attempt to create a simple neural network
