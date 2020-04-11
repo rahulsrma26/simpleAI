@@ -6,13 +6,15 @@ configuration:
 - Debug
 - Release
 
-environment:
-  matrix:
-  - DBUILD_SHARED_LIBS: 0
-  - DBUILD_SHARED_LIBS: 1
+# environment:
+#   matrix:
+#   - DBUILD_SHARED_LIBS: 0
+#   - DBUILD_SHARED_LIBS: 1
 
 before_build:
-- cmd: cmake -H. -B./build -DBUILD_SHARED_LIBS=%DBUILD_SHARED_LIBS%
+- cmd: cmake -H. -B./build
+# - cmd: cmake -H. -B./build -DBUILD_SHARED_LIBS=%DBUILD_SHARED_LIBS%
 
 build:
+  project: simpleAI.sln
   verbosity: normal
