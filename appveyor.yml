@@ -16,5 +16,5 @@ before_build:
 # - cmd: cmake -H. -B./build -DBUILD_SHARED_LIBS=%DBUILD_SHARED_LIBS%
 
 build:
-  project: simpleAI.sln
+  project: build/simpleAI.sln
   verbosity: normal
