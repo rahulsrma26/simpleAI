@@ -1,5 +1,5 @@
-Simple Neural Network Library (v2 beta)
-========================================
+Simple Neural Network Library (v2)
+==================================
 
 [![Build Status](https://img.shields.io/travis/rahulsrma26/simpleAI.svg?branch=master&style=plastic&label=linux+gcc)](https://travis-ci.org/rahulsrma26/simpleAI)
 [![Build Status](https://img.shields.io/travis/rahulsrma26/simpleAI.svg?branch=master&style=plastic&label=linux+clang)](https://travis-ci.org/rahulsrma26/simpleAI)
